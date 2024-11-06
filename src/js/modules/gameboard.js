@@ -2,12 +2,15 @@ function Gameboard() {
     const initGameboard = () => {
         const rows = 10;
         const columns = 10;
-        const board = Array.from(Array(rows), () => Array(columns).fill(null));
-        return board;
+        return Array.from(Array(rows), () => Array(columns).fill(null));
     };
 
+    const board = initGameboard();
+
+    const getBoard = () => board;
+
     return {
-        initGameboard
+        getBoard
     };
 }
 
