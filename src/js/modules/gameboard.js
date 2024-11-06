@@ -42,9 +42,28 @@ function Gameboard() {
         return true;
     };
 
+    const receiveAttack = (place) => {
+        const { row, col } = place;
+
+        // Check if the place is within the board bounds
+        if (row < 0 || col < 0 || row >= board.length || col >= board[0].length) {
+            throw new Error('Place is out of bounds');
+        }
+
+        // Check if in the space exists a ship
+        if (board[row][col] === null) {
+            return 'Missed attack';
+        } else if (board[row][col] === 0) {
+            return 'This place already attacked';
+        } else {
+            return true;
+        }
+    };
+
     return {
         getBoard,
-        placeShip
+        placeShip,
+        receiveAttack
     };
 }
 
