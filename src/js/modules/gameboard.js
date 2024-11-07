@@ -69,10 +69,24 @@ function Gameboard() {
         }
     };
 
+    // Check if all ships are sunk
+    const allIsSunk = () => {
+        // Check if the game is started
+        const start = board.every((cell) => cell === null);
+        if (start) return false;
+
+        // Check if the game is over
+        const end = board.some((cell) => cell === 1);
+        if (!end) return true;
+
+        return false;
+    };
+
     return {
         getBoard,
         placeShip,
-        receiveAttack
+        receiveAttack,
+        allIsSunk
     };
 }
 
