@@ -8,8 +8,10 @@ function Ship(length) {
             this.isSunk();
         },
         isSunk: function () {
-            this.sunk = this.hits === this.length;
-            return this.sunk
+            if (this.hits === this.length && !this.sunk) {
+                this.sunk = true;
+            }
+            return this.sunk;
         }
     };
 
