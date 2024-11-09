@@ -27,4 +27,21 @@ describe('Gameboard factory function', () => {
         const place = { row: 0, col: 9 };
         expect(gameboard.placeShip(ship1, place)).toBe('Ship does not fit in the selected space');
     });
+
+    test('should return missed attack status', () => {
+        const place = { row: 5, col: 5 };
+        expect(gameboard.receiveAttack(place)).toBe(0);
+    });
+
+    test('should return hit attack status', () => {
+        const place = { row: 0, col: 0 };
+        gameboard.placeShip(ship1, { row: 0, col: 0 });
+        expect(gameboard.receiveAttack(place)).toBe(1);
+    });
+
+    test('should register missed attacks', () => {
+        const place = { row: 9, col: 9 };
+        gameboard.receiveAttack(place);
+        expect(gameboard.getBoard()[9][9]).toBe(0);
+    });
 });
