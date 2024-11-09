@@ -49,9 +49,14 @@ function Player() {
         return status;
     };
 
+    const allIsSunk = () => {
+        return gameboard.allIsSunk();
+    };
+
     return {
         placeAllShips,
-        attack
+        attack,
+        allIsSunk
     };
 }
 
