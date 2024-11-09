@@ -1,7 +1,7 @@
 import { Ship } from "./ship";
 import { Gameboard } from "./gameboard";
 
-function Player() {
+function Player(name) {
     const gameboard = Gameboard();
 
     // Gameboard of the player
@@ -53,8 +53,15 @@ function Player() {
         return gameboard.allIsSunk();
     };
 
+    const placeComputerShips = () => {
+        if (!name) {
+            placeAllShips();
+        }
+    };
+
     return {
         placeAllShips,
+        placeComputerShips,
         attack,
         allIsSunk
     };
