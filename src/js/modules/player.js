@@ -42,8 +42,16 @@ function Player() {
         return true;
     };
 
+    const attack = (place) => {
+        const status = gameboard.receiveAttack(place);
+        if (status === 0) return false;
+        if (status === 1) return true;
+        return status;
+    };
+
     return {
-        placeAllShips
+        placeAllShips,
+        attack
     };
 }
 
