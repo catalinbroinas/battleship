@@ -44,4 +44,22 @@ describe('Gameboard factory function', () => {
         gameboard.receiveAttack(place);
         expect(gameboard.getBoard()[9][9]).toBe(0);
     });
+
+    test('should report all ships as sunk when no ship parts remain', () => {
+        const place = { row: 0, col: 0 };
+        gameboard.placeShip(ship1, { row: 0, col: 0 });
+        gameboard.receiveAttack(place);
+        gameboard.receiveAttack({ row: 0, col: 1 });
+        gameboard.receiveAttack({ row: 0, col: 2 });
+        expect(gameboard.allIsSunk()).toBe(true);
+    });
+
+    test('should not report all ships as sunk if any ship remains', () => {
+        const ship2 = Ship(2);
+        gameboard.placeShip(ship1, { row: 0, col: 0 });
+        gameboard.placeShip(ship2, { row: 1, col: 0 });
+        gameboard.receiveAttack({ row: 0, col: 0 });
+        gameboard.receiveAttack({ row: 0, col: 1 });
+        expect(gameboard.allIsSunk()).toBe(false);
+    });
 });
