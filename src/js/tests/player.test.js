@@ -23,4 +23,16 @@ describe('Player factory function', () => {
         expect(player1.placeAllShips()).toBe(true);
         expect(player2.placeAllShips()).toBe(true);
     });
+
+    test('should allow the computer to make a random attack', () => {
+        const computerAttackResult = player2.attack();
+        expect(computerAttackResult === true || computerAttackResult === false).toBe(true);
+    });
+
+    test('should register an attack on the gameboard', () => {
+        const attackPosition = { row: 1, col: 1 };
+        expect(player1.attack(attackPosition)).toBe(false);
+        const result = player1.attack(attackPosition);
+        expect(result === true || result === false).toBe(false);
+    });
 });
