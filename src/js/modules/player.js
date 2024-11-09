@@ -1,7 +1,7 @@
 import { Ship } from "./ship";
 import { Gameboard } from "./gameboard";
 
-function Player(name) {
+function Player(name, type) {
     const gameboard = Gameboard();
 
     // Gameboard of the player
@@ -43,9 +43,20 @@ function Player(name) {
     };
 
     const attack = (place) => {
-        const status = gameboard.receiveAttack(place);
+        let attackPlace = place;
+
+        // If it's the computer's turn, generate a random place
+        if (type === 'computer') {
+            const randomRow = Math.floor(Math.random() * 10);
+            const randomCol = Math.floor(Math.random() * 10);
+            attackPlace = { row: randomRow, col: randomCol };
+        }
+
+        const status = gameboard.receiveAttack(attackPlace);
+
         if (status === 0) return false;
         if (status === 1) return true;
+
         return status;
     };
 
@@ -53,23 +64,11 @@ function Player(name) {
         return gameboard.allIsSunk();
     };
 
-    const placeComputerShips = () => {
-        placeAllShips();
-    };
-
-    const computerAttack = () => {
-        const randomRow = Math.floor(Math.random() * 10);
-        const randomCol = Math.floor(Math.random() * 10);
-        const place = { row: randomRow, col: randomCol };
-
-        attack(place);
-    };
-
     return {
+        name,
+        type,
         placeAllShips,
-        placeComputerShips,
         attack,
-        computerAttack,
         allIsSunk
     };
 }
