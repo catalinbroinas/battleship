@@ -54,15 +54,22 @@ function Player(name) {
     };
 
     const placeComputerShips = () => {
-        if (!name) {
-            placeAllShips();
-        }
+        placeAllShips();
+    };
+
+    const computerAttack = () => {
+        const randomRow = Math.floor(Math.random() * 10);
+        const randomCol = Math.floor(Math.random() * 10);
+        const place = { row: randomRow, col: randomCol };
+
+        attack(place);
     };
 
     return {
         placeAllShips,
         placeComputerShips,
         attack,
+        computerAttack,
         allIsSunk
     };
 }
