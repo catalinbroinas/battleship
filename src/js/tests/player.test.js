@@ -18,4 +18,9 @@ describe('Player factory function', () => {
         expect(player2.name).toBe("Computer");
         expect(player2.type).toBe('computer');
     });
+
+    test('should place all ships on the player\'s board without errors', () => {
+        expect(player1.placeAllShips()).toBe(true);
+        expect(player2.placeAllShips()).toBe(true);
+    });
 });
