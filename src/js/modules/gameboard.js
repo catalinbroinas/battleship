@@ -25,7 +25,7 @@ function Gameboard() {
         }
 
         // Check if the ship fits in the space on the board
-        if (col + length >= board[0].length) {
+        if (col + length > board[0].length) {
             return 'Ship does not fit in the selected space';
         }
 
@@ -37,7 +37,7 @@ function Gameboard() {
         }
 
         // Place the ship on the board
-        Array.from({ length }, (_, i) => board[row][col + i] = 1);
+        Array.from({ length }, (_, i) => board[row][col + i] = ship.name);
         return true;
     };
 
@@ -51,7 +51,7 @@ function Gameboard() {
         }
 
         // If the place was already attacked, do nothing
-        if (board[row][col] === 0) return;
+        if (board[row][col] === 0 || board[row][col] === 1) return;
 
         // Mark as missed if no ship is present
         if (board[row][col] === null) {
@@ -60,8 +60,8 @@ function Gameboard() {
         }
 
         // Mark as hit if a ship is present
-        if (board[row][col] === 1) {
-            board[row][col] = 0;
+        if (board[row][col] !== null && board[row][col] !== 0) {
+            board[row][col] = 1;
             return 1;
         }
     };
@@ -72,8 +72,8 @@ function Gameboard() {
         const start = board.every(row => row.every(cell => cell === null));
         if (start) return false;
 
-        // Check if any ships remain: if no cell contains 1, all ships are sunk
-        const end = board.some(row => row.some(cell => cell === 1));
+        // Check if any ships remain: all cells contain 0, 1 or null, all ships are sunk
+        const end = board.some(row => row.some(cell => typeof cell === 'string'));
         if (!end) return true;
 
         // Return false if there are still ships on the board
