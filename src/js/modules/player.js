@@ -42,6 +42,15 @@ function Player(name, type) {
         return true;
     };
 
+    // Place ship on the gameboard at a specified location
+    const placeShip = (ship, place) => {
+        // Check ih the ship exists in the `ships` list
+        const validShip = ships.find(item => item.name === ship.name);
+        if (!validShip) return 'Invalid ship';
+
+        return gameboard.placeShip(ship, place);
+    };
+
     const attack = (place) => {
         let attackPlace = place;
 
@@ -68,6 +77,7 @@ function Player(name, type) {
         name,
         type,
         placeAllShips,
+        placeShip,
         attack,
         allIsSunk
     };
