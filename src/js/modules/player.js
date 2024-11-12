@@ -69,6 +69,10 @@ function Player(name, type) {
         return status;
     };
 
+    const allIsPlace = () => {
+        return ships.every(ship => board.some(item => item && item.name === ship.name));
+    };
+
     const allIsSunk = () => {
         return gameboard.allIsSunk();
     };
@@ -79,7 +83,8 @@ function Player(name, type) {
         placeAllShips,
         placeShip,
         attack,
-        allIsSunk
+        allIsSunk,
+        allIsPlace
     };
 }
 
