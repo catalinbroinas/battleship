@@ -75,7 +75,7 @@ function Gameboard() {
         if (gameNotStarted) return false;
 
         // Check if any ships remain: all cells contain 0, 1 or null, all ships are sunk
-        const shipsRemaining = board.some(row => row.some(cell => typeof cell === 'string'));
+        const shipsRemaining = board.some(row => row.some(cell => typeof cell === 'object' && cell !== null));
         if (!shipsRemaining) return true;
 
         // Return false if there are still ships on the board
