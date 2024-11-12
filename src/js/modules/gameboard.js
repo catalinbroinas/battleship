@@ -1,3 +1,5 @@
+import { Ship } from "./ship";
+
 function Gameboard() {
     const initGameboard = () => {
         const rows = 10;
@@ -15,9 +17,7 @@ function Gameboard() {
         const { length } = ship;
 
         // Validate the ship length
-        if (!length) {
-            return 'Select a valid ship';
-        }
+        if (!length) return 'Select a valid ship';
 
         // Check if the place is within the board bounds
         if (row < 0 || col < 0 || row >= board.length || col >= board[0].length) {
@@ -30,14 +30,14 @@ function Gameboard() {
         }
 
         // Check if the space is already occupied by another ship
-        const emptyPlace = Array.from({ length }, (_, i) => board[row][col + i]
+        const occupiedPlace = Array.from({ length }, (_, i) => board[row][col + i]
         ).some((cell) => cell !== null);
-        if (emptyPlace) {
+        if (occupiedPlace) {
             return 'This place is already occupied';
         }
 
         // Place the ship on the board
-        Array.from({ length }, (_, i) => board[row][col + i] = ship.name);
+        Array.from({ length }, (_, i) => board[row][col + i] = ship);
         return true;
     };
 
@@ -60,7 +60,9 @@ function Gameboard() {
         }
 
         // Mark as hit if a ship is present
-        if (board[row][col] !== null && board[row][col] !== 0) {
+        const attackedShip = board[row][col];
+        if (attackedShip) {
+            attackedShip.hit();
             board[row][col] = 1;
             return 1;
         }
