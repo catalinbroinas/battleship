@@ -9,11 +9,11 @@ function Player(name, type) {
 
     // List of ships
     const ships = [
-        Ship(5),  // Carrier
-        Ship(4),  // Battleship
-        Ship(3),  // Cruiser
-        Ship(3),  // Submarine
-        Ship(2)   // Destroyer
+        Ship(5, 'carrier'),
+        Ship(4, 'battleship'),
+        Ship(3, 'cruiser'),
+        Ship(3, 'submarine'),
+        Ship(2, 'destroyer')
     ];
 
     // Place all ships on the gameboard at random locations
