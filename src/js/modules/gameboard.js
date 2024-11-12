@@ -71,12 +71,12 @@ function Gameboard() {
     // Check if all ships are sunk
     const allIsSunk = () => {
         // Check if the game has started: if all cells are null, the game has not begun
-        const start = board.every(row => row.every(cell => cell === null));
-        if (start) return false;
+        const gameNotStarted = board.every(row => row.every(cell => cell === null));
+        if (gameNotStarted) return false;
 
         // Check if any ships remain: all cells contain 0, 1 or null, all ships are sunk
-        const end = board.some(row => row.some(cell => typeof cell === 'string'));
-        if (!end) return true;
+        const shipsRemaining = board.some(row => row.some(cell => typeof cell === 'string'));
+        if (!shipsRemaining) return true;
 
         // Return false if there are still ships on the board
         return false;
