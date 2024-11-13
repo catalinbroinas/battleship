@@ -121,7 +121,7 @@ describe('Player factory function', () => {
         const carrier = player1.getShips()[0];
 
         player1.placeAllShips();
-        expect(player1.placeShip(carrier, place)).toBe('This place is already occupied');
+        expect(player1.placeShip(carrier, place)).toBe('The board is full');
     });
 
     test('should place ship on the gameboard for player 2, place all ships for player 1', () => {
@@ -156,5 +156,84 @@ describe('Player factory function', () => {
         expect(player1.attack(attackPosition)).toBe(false);
         const result = player1.attack(attackPosition);
         expect(result === true || result === false).toBe(false);
+    });
+
+    test('should attack ships on the board', () => {
+        const place1 = { row: 0, col: 0 };
+        const place2 = { row: 1, col: 0 };
+        const place3 = { row: 2, col: 0 };
+        const place4 = { row: 3, col: 0 };
+        const place5 = { row: 4, col: 0 };
+
+        const carrier1 = player1.getShips()[0];
+        const battleship1 = player1.getShips()[1];
+        const cruiser1 = player1.getShips()[2];
+        const submarine1 = player1.getShips()[3];
+        const destroyer1 = player1.getShips()[4];
+
+        const carrier2 = player2.getShips()[0];
+        const battleship2 = player2.getShips()[1];
+        const cruiser2 = player2.getShips()[2];
+        const submarine2 = player2.getShips()[3];
+        const destroyer2 = player2.getShips()[4];
+
+        player1.placeShip(carrier1, place1);
+        player1.placeShip(battleship1, place2);
+        player1.placeShip(cruiser1, place3);
+        player1.placeShip(submarine1, place4);
+        player1.placeShip(destroyer1, place5);
+
+        player2.placeShip(carrier2, place1);
+        player2.placeShip(battleship2, place2);
+        player2.placeShip(cruiser2, place3);
+        player2.placeShip(submarine2, place4);
+        player2.placeShip(destroyer2, place5);
+
+        expect(player1.allIsPlace()).toBe(true);
+        expect(player2.allIsPlace()).toBe(true);
+
+        expect(player1.attack(place1)).toBe(true);
+        expect(player1.attack({ row: 4, col: 4 })).toBe(false);
+
+        let computerAttack = player2.attack();
+        expect(computerAttack === true || computerAttack === false).toBe(true);
+        computerAttack = player2.attack();
+        expect(computerAttack === true || computerAttack === false).toBe(true);
+    });
+
+    test('should return false, because the game has not started', () => {
+        expect(player1.allIsSunk()).toBe(false);
+        expect(player2.allIsSunk()).toBe(false);
+    });
+
+    test('should sink a ship after all its parts are hit', () => {
+        const place = { row: 0, col: 0 };
+        const destroyer = player1.getShips()[4];
+
+        player1.placeShip(destroyer, place);
+
+        expect(player1.attack(place)).toBe(true);
+        expect(player1.attack({ row: 0, col: 1 })).toBe(true);
+
+        expect(player1.allIsSunk()).toBe(true);
+    });
+
+    test('should return false when attacking an empty location', () => {
+        const invalidPlace = { row: 10, col: 10 };
+        expect(player1.attack(invalidPlace)).toBe('Place is out of bounds');
+    });
+
+    test('should not allow to attack a sunken ship again', () => {
+        const place = { row: 0, col: 0 };
+        const destroyer = player1.getShips()[4];
+
+        player1.placeShip(destroyer, place);
+
+        expect(player1.attack(place)).toBe(true);
+        expect(player1.attack({ row: 0, col: 1 })).toBe(true);
+
+        expect(player1.allIsSunk()).toBe(true);
+
+        expect(player1.attack(place)).toBe(undefined);
     });
 });
