@@ -22,6 +22,10 @@ function Player(name, type) {
 
     // Place all ships on the gameboard at random locations
     const placeAllShips = () => {
+        // Check if the board is clear
+        const clear = board.every(row => row.every(cell => cell === null));
+        if (!clear) return false;
+
         ships.forEach((ship) => {
             let placed = false;
 

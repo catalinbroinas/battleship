@@ -135,6 +135,17 @@ describe('Player factory function', () => {
         expect(player2.allIsPlace()).toBe(false);
     });
 
+    test('should place all ships on the player\'s board only once', () => {
+        expect(player1.placeAllShips()).toBe(true);
+        expect(player1.placeAllShips()).toBe(false);
+
+        expect(player2.placeAllShips()).toBe(true);
+        expect(player2.placeAllShips()).toBe(false);
+
+        expect(player1.allIsPlace()).toBe(true);
+        expect(player2.allIsPlace()).toBe(true);
+    });
+
     test('should allow the computer to make a random attack', () => {
         const computerAttackResult = player2.attack();
         expect(computerAttackResult === true || computerAttackResult === false).toBe(true);
