@@ -69,7 +69,7 @@ function Player(name, type) {
     };
 
     const allIsPlace = () => {
-        return ships.every(ship => board.some(item => item && item.name === ship.name));
+        return ships.every(ship => board.some(row => row.some(item => item && item.name === ship.name)));
     };
 
     const allIsSunk = () => {
