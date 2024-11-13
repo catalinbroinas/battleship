@@ -147,14 +147,14 @@ describe('Player factory function', () => {
     });
 
     test('should allow the computer to make a random attack', () => {
-        const computerAttackResult = player2.attack();
+        const computerAttackResult = player2.attack(player1.getBoard());
         expect(computerAttackResult === true || computerAttackResult === false).toBe(true);
     });
 
     test('should register an attack on the gameboard', () => {
         const attackPosition = { row: 1, col: 1 };
-        expect(player1.attack(attackPosition)).toBe(false);
-        const result = player1.attack(attackPosition);
+        expect(player1.attack(player2.getBoard(), attackPosition)).toBe(false);
+        const result = player1.attack(player2.getBoard(), attackPosition);
         expect(result === true || result === false).toBe(false);
     });
 
@@ -192,12 +192,12 @@ describe('Player factory function', () => {
         expect(player1.allIsPlace()).toBe(true);
         expect(player2.allIsPlace()).toBe(true);
 
-        expect(player1.attack(place1)).toBe(true);
-        expect(player1.attack({ row: 4, col: 4 })).toBe(false);
+        expect(player1.attack(player2.getBoard(), place1)).toBe(true);
+        expect(player1.attack(player2.getBoard(), { row: 4, col: 4 })).toBe(false);
 
-        let computerAttack = player2.attack();
+        let computerAttack = player2.attack(player1.getBoard());
         expect(computerAttack === true || computerAttack === false).toBe(true);
-        computerAttack = player2.attack();
+        computerAttack = player2.attack(player1.getBoard());
         expect(computerAttack === true || computerAttack === false).toBe(true);
     });
 
@@ -208,32 +208,40 @@ describe('Player factory function', () => {
 
     test('should sink a ship after all its parts are hit', () => {
         const place = { row: 0, col: 0 };
-        const destroyer = player1.getShips()[4];
+        const destroyer = player2.getShips()[4];
 
-        player1.placeShip(destroyer, place);
+        player2.placeShip(destroyer, place);
 
-        expect(player1.attack(place)).toBe(true);
-        expect(player1.attack({ row: 0, col: 1 })).toBe(true);
+        expect(player1.attack(player2.getBoard(), place)).toBe(true);
+        expect(player1.attack(player2.getBoard(), { row: 0, col: 1 })).toBe(true);
 
-        expect(player1.allIsSunk()).toBe(true);
+        expect(player2.allIsSunk()).toBe(true);
     });
 
     test('should return false when attacking an empty location', () => {
         const invalidPlace = { row: 10, col: 10 };
-        expect(player1.attack(invalidPlace)).toBe('Place is out of bounds');
+        expect(player1.attack(player2.getBoard(), invalidPlace)).toBe('Place is out of bounds');
     });
 
     test('should not allow to attack a sunken ship again', () => {
         const place = { row: 0, col: 0 };
-        const destroyer = player1.getShips()[4];
+        const destroyer1 = player1.getShips()[4];
+        const destroyer2 = player2.getShips()[4];
 
-        player1.placeShip(destroyer, place);
+        player1.placeShip(destroyer1, place);
+        player2.placeShip(destroyer2, place);
 
-        expect(player1.attack(place)).toBe(true);
-        expect(player1.attack({ row: 0, col: 1 })).toBe(true);
+        expect(player1.attack(player2.getBoard(), place)).toBe(true);
+        expect(player1.attack(player2.getBoard(), { row: 0, col: 1 })).toBe(true);
 
-        expect(player1.allIsSunk()).toBe(true);
+        expect(player1.allIsSunk()).toBe(false);
+        expect(player2.allIsSunk()).toBe(true);
 
-        expect(player1.attack(place)).toBe(undefined);
+        expect(player1.attack(player2.getBoard(), place)).toBe(undefined);
+    });
+
+    test('should allow the computer to make a random attack', () => {
+        const computerAttackResult = player2.attack(player1.getBoard());
+        expect(computerAttackResult === true || computerAttackResult === false).toBe(true);
     });
 });

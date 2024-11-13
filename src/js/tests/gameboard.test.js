@@ -58,25 +58,25 @@ describe('Gameboard factory function', () => {
 
     test('should return missed attack status for empty cells', () => {
         const place = { row: 5, col: 5 };
-        expect(gameboard.receiveAttack(place)).toBe(0);
+        expect(gameboard.receiveAttack(gameboard.getBoard(), place)).toBe(0);
     });
 
     test('should return an error for an out-of-bounds attack', () => {
-        expect(gameboard.receiveAttack({ row: 10, col: 10 })).toBe('Place is out of bounds');
+        expect(gameboard.receiveAttack(gameboard.getBoard(), { row: 10, col: 10 })).toBe('Place is out of bounds');
     });
 
     test('should attack a ship on the edge of the gameboard', () => {
         const place = { row: 0, col: 7 };
         gameboard.placeShip(carrier, place);
-        expect(gameboard.receiveAttack(place)).toBe(1);
-        expect(gameboard.receiveAttack({ row: 0, col: 8 })).toBe(1);
-        expect(gameboard.receiveAttack({ row: 0, col: 9 })).toBe(1);
+        expect(gameboard.receiveAttack(gameboard.getBoard(), place)).toBe(1);
+        expect(gameboard.receiveAttack(gameboard.getBoard(), { row: 0, col: 8 })).toBe(1);
+        expect(gameboard.receiveAttack(gameboard.getBoard(), { row: 0, col: 9 })).toBe(1);
     });
 
     test('should return hit attack status and update ship hit count', () => {
         const place = { row: 0, col: 0 };
         gameboard.placeShip(carrier, place);
-        expect(gameboard.receiveAttack(place)).toBe(1);
+        expect(gameboard.receiveAttack(gameboard.getBoard(), place)).toBe(1);
         expect(carrier.hits).toBe(1);
     });
 
@@ -87,13 +87,13 @@ describe('Gameboard factory function', () => {
         gameboard.placeShip(destroyer, place2);
 
         // Attack all cells of carrier
-        gameboard.receiveAttack({ row: 0, col: 0 });
-        gameboard.receiveAttack({ row: 0, col: 1 });
-        gameboard.receiveAttack({ row: 0, col: 2 });
+        gameboard.receiveAttack(gameboard.getBoard(), { row: 0, col: 0 });
+        gameboard.receiveAttack(gameboard.getBoard(), { row: 0, col: 1 });
+        gameboard.receiveAttack(gameboard.getBoard(), { row: 0, col: 2 });
 
         // Attack all cells of destroyer
-        gameboard.receiveAttack({ row: 1, col: 0 });
-        gameboard.receiveAttack({ row: 1, col: 1 });
+        gameboard.receiveAttack(gameboard.getBoard(), { row: 1, col: 0 });
+        gameboard.receiveAttack(gameboard.getBoard(), { row: 1, col: 1 });
 
         expect(gameboard.allIsSunk()).toBe(true);
     });
@@ -105,7 +105,7 @@ describe('Gameboard factory function', () => {
     test('should return false when some ships are afloat', () => {
         const place = { row: 0, col: 0 };
         gameboard.placeShip(carrier, place);
-        gameboard.receiveAttack(place);
+        gameboard.receiveAttack(gameboard.getBoard(), place);
 
         expect(gameboard.allIsSunk()).toBe(false);
     });
@@ -115,8 +115,8 @@ describe('Gameboard factory function', () => {
         gameboard.placeShip(destroyer, { row: 1, col: 0 });
 
         // Attack only part of carrier
-        gameboard.receiveAttack({ row: 0, col: 0 });
-        gameboard.receiveAttack({ row: 0, col: 1 });
+        gameboard.receiveAttack(gameboard.getBoard(), { row: 0, col: 0 });
+        gameboard.receiveAttack(gameboard.getBoard(), { row: 0, col: 1 });
 
         expect(gameboard.allIsSunk()).toBe(false);
     });
@@ -128,9 +128,9 @@ describe('Gameboard factory function', () => {
         gameboard.placeShip(carrier, place1);
         gameboard.placeShip(destroyer, place2);
 
-        gameboard.receiveAttack({ row: 0, col: 0 });
-        gameboard.receiveAttack({ row: 0, col: 1 });
-        gameboard.receiveAttack({ row: 0, col: 2 });
+        gameboard.receiveAttack(gameboard.getBoard(), { row: 0, col: 0 });
+        gameboard.receiveAttack(gameboard.getBoard(), { row: 0, col: 1 });
+        gameboard.receiveAttack(gameboard.getBoard(), { row: 0, col: 2 });
 
         expect(gameboard.allIsSunk()).toBe(false);
     });
@@ -138,10 +138,10 @@ describe('Gameboard factory function', () => {
     test('should not allow multiple attacks on the same cell', () => {
         const place = { row: 0, col: 0 };
         gameboard.placeShip(carrier, place);
-        gameboard.receiveAttack(place);
+        gameboard.receiveAttack(gameboard.getBoard(), place);
 
         // Attempting a second attack on the same cell should not change the result
-        expect(gameboard.receiveAttack(place)).toBe(undefined);
+        expect(gameboard.receiveAttack(gameboard.getBoard(), place)).toBe(undefined);
         expect(gameboard.getBoard()[0][0]).toBe(1);
     });
 });

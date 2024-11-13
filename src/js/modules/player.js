@@ -57,7 +57,7 @@ function Player(name, type) {
         return gameboard.placeShip(ship, place);
     };
 
-    const attack = (place) => {
+    const attack = (opponentBoard, place) => {
         let attackPlace = place;
 
         // If it's the computer's turn, generate a random place
@@ -67,7 +67,7 @@ function Player(name, type) {
             attackPlace = { row: randomRow, col: randomCol };
         }
 
-        const status = gameboard.receiveAttack(attackPlace);
+        const status = gameboard.receiveAttack(opponentBoard, attackPlace);
 
         if (status === 0) return false;
         if (status === 1) return true;

@@ -42,28 +42,28 @@ function Gameboard() {
     };
 
     // Processes an attack on the gameboard at the specified location
-    const receiveAttack = (place) => {
+    const receiveAttack = (opponentBoard, place) => {
         const { row, col } = place;
 
         // Check if the attack is within the board boundaries
-        if (row < 0 || col < 0 || row >= board.length || col >= board[0].length) {
+        if (row < 0 || col < 0 || row >= opponentBoard.length || col >= opponentBoard[0].length) {
             return 'Place is out of bounds';
         }
 
         // If the place was already attacked, do nothing
-        if (board[row][col] === 0 || board[row][col] === 1) return;
+        if (opponentBoard[row][col] === 0 || opponentBoard[row][col] === 1) return;
 
         // Mark as missed if no ship is present
-        if (board[row][col] === null) {
-            board[row][col] = 0;
+        if (opponentBoard[row][col] === null) {
+            opponentBoard[row][col] = 0;
             return 0;
         }
 
         // Mark as hit if a ship is present
-        const attackedShip = board[row][col];
+        const attackedShip = opponentBoard[row][col];
         if (attackedShip) {
             attackedShip.hit();
-            board[row][col] = 1;
+            opponentBoard[row][col] = 1;
             return 1;
         }
     };
