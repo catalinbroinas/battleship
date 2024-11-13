@@ -51,6 +51,9 @@ function Player(name, type) {
         const validShip = ships.find(item => item.name === ship.name);
         if (!validShip) return 'Invalid ship';
 
+        // Check if the board is full
+        if (allIsPlace()) return 'The board is full';
+
         return gameboard.placeShip(ship, place);
     };
 
