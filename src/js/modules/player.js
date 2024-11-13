@@ -7,6 +7,8 @@ function Player(name, type) {
     // Gameboard of the player
     const board = gameboard.getBoard();
 
+    const getBoard = () => board;
+
     // List of ships
     const ships = [
         Ship(5, 'carrier'),
@@ -16,25 +18,22 @@ function Player(name, type) {
         Ship(2, 'destroyer')
     ];
 
+    const getShips = () => ships;
+
     // Place all ships on the gameboard at random locations
     const placeAllShips = () => {
         ships.forEach((ship) => {
             let placed = false;
 
             // Keep trying until the ship is placed correctly
-            while (!placed) {
+            while (placed !== true) {
                 const randomRow = Math.floor(Math.random() * 10);
                 const randomCol = Math.floor(Math.random() * 10);
 
                 const place = { row: randomRow, col: randomCol };
 
-                try {
-                    // Attempt to place the ship at the generated position
-                    placed = gameboard.placeShip(ship, place);
-                } catch (error) {
-                    // If placement fails, retry
-                    placed = false;
-                }
+                // Attempt to place the ship at the generated position
+                placed = gameboard.placeShip(ship, place);
             }
         });
 
@@ -84,7 +83,9 @@ function Player(name, type) {
         placeShip,
         attack,
         allIsSunk,
-        allIsPlace
+        allIsPlace,
+        getBoard,
+        getShips
     };
 }
 
