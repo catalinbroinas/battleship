@@ -7,6 +7,10 @@ function Game() {
 
     const createPlayer = (name, type) => Player(name, type);
 
+    const getPlayerName = () => player1.name;
+    const getComputerName = () => player2.name;
+    const getCurrentPlayerName = () => currentPlayer.name;
+
     const initGame = (playerName, computerName) => {
         player1 = createPlayer(playerName || 'Player', 'human');
         player2 = createPlayer(computerName || 'Computer', 'computer');
@@ -30,6 +34,9 @@ function Game() {
 
     return {
         createPlayer,
+        getPlayerName,
+        getComputerName,
+        getCurrentPlayerName,
         initGame,
         startGame,
         playerTurn,

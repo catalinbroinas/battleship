@@ -7,7 +7,25 @@ describe('Game factory function', () => {
         game = Game();
     });
 
-    test('should to init game with two players', () => {
-        expect(game.initGame('User', 'Acer')).toBe(true);
+    test('should initialize game with default two players and place ships successfully', () => {
+        const initStatus = game.initGame();
+
+        expect(initStatus).toBe(true);
+
+        expect(game.getPlayerName()).toBe('Player');
+        expect(game.getComputerName()).toBe('Computer');
+
+        expect(game.getCurrentPlayerName()).toBe(game.getPlayerName());
+    });
+
+    test('should initialize game with two players and place ships successfully', () => {
+        const initStatus = game.initGame('Cata', 'Acer');
+
+        expect(initStatus).toBe(true);
+
+        expect(game.getPlayerName()).toBe('Cata');
+        expect(game.getComputerName()).toBe('Acer');
+
+        expect(game.getCurrentPlayerName()).toBe(game.getPlayerName());
     });
 });
