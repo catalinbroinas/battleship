@@ -28,4 +28,16 @@ describe('Game factory function', () => {
 
         expect(game.getCurrentPlayerName()).toBe(game.getPlayerName());
     });
+
+    test('should return result of attack and switch player', () => {
+        game.initGame();
+        const initialPlayer = game.getCurrentPlayerName();
+        const place = { row: 0, col: 0 };
+        const result = game.playerTurn(place);
+
+        expect(result === true || result === false).toBe(true);
+
+        const newPlayer = game.getCurrentPlayerName();
+        expect(newPlayer).not.toBe(initialPlayer);
+    });
 });
