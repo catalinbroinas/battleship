@@ -20,10 +20,6 @@ function Game() {
         return player1.placeAllShips() && player2.placeAllShips();
     };
 
-    const startGame = () => {
-
-    };
-
     const playerTurn = (place) => {
 
     };
@@ -38,7 +34,6 @@ function Game() {
         getComputerName,
         getCurrentPlayerName,
         initGame,
-        startGame,
         playerTurn,
         checkWinner
     };
