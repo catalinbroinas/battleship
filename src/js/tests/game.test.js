@@ -79,4 +79,35 @@ describe('Game factory function', () => {
             expect(result).not.toBe(undefined);
         });
     });
+
+    test('should correctly detect winner when all ships are sunk', () => {
+        game.initGame('Player', 'Computer');
+        let winner = game.checkWinner();
+
+        expect(winner).toBe(false);
+
+        for (let row = 0; row < 10; row++) {
+            for (let col = 0; col < 10; col++) {
+                // Attack of the player
+                game.playerTurn({ row, col });
+
+                winner = game.checkWinner();
+                if (winner) {
+                    expect(winner).toBe(game.getCurrentPlayerName());
+                    return;
+                }
+
+                // Attack of the computer
+                game.playerTurn({ row, col });
+
+                winner = game.checkWinner();
+                if (winner) {
+                    expect(winner).toBe(game.getCurrentPlayerName());
+                    return;
+                }
+            }
+        }
+
+        throw new Error('Expected a winner to be declared');
+    });
 });
