@@ -61,4 +61,42 @@ describe('Game factory function', () => {
 
         expect(result).toBe(undefined);
     });
+
+    test('should allow attacks on all board positions', () => {
+        game.initGame('Player', 'Computer');
+
+        const positionAttacked = [];
+
+        for (let row = 0; row < 10; row++) {
+            for (let col = 0; col < 10; col++) {
+                const result = game.playerTurn({ row, col });
+                positionAttacked.push(result);
+            }
+        }
+
+        expect(positionAttacked.length).toBe(100);
+        positionAttacked.forEach(result => {
+            expect(result).not.toBe(undefined);
+        });
+    });
+    //     game.initGame('Player', 'Computer');
+
+    //     const opponent = game.getCurrentPlayerName() === 'Player' ? 'Computer' : 'Player';
+
+    //     // Iterează prin toate pozițiile pentru a ataca tabla adversarului
+    //     for (let row = 0; row < 10; row++) {
+    //         for (let col = 0; col < 10; col++) {
+    //             game.playerTurn({ row, col });  // Execută atacul
+    //         }
+    //     }
+
+    //     console.log(game.getPlayerBoard());
+    //     console.log(game.getComputerBoard());
+
+    //     // După ce toate pozițiile au fost atacate, verifică câștigătorul
+    //     const winner = game.checkWinner();
+    //     expect(winner).toBe(opponent);  // Verifică că câștigătorul este corect (adversarul)
+
+    //     // Dacă ajungi aici, testul va trece dacă a fost detectat un câștigător corect
+    // });
 });

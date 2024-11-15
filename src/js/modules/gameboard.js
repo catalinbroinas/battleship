@@ -47,7 +47,7 @@ function Gameboard() {
 
         // Check if the attack is within the board boundaries
         if (row < 0 || col < 0 || row >= opponentBoard.length || col >= opponentBoard[0].length) {
-            return 'Place is out of bounds';
+            return;
         }
 
         // If the place was already attacked, do nothing
