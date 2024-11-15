@@ -61,4 +61,22 @@ describe('Game factory function', () => {
 
         expect(result).toBe(undefined);
     });
+
+    test('should allow attacks on all board positions', () => {
+        game.initGame('Player', 'Computer');
+
+        const positionAttacked = [];
+
+        for (let row = 0; row < 10; row++) {
+            for (let col = 0; col < 10; col++) {
+                const result = game.playerTurn({ row, col });
+                positionAttacked.push(result);
+            }
+        }
+
+        expect(positionAttacked.length).toBe(100);
+        positionAttacked.forEach(result => {
+            expect(result).not.toBe(undefined);
+        });
+    });
 });

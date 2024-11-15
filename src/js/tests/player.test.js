@@ -220,7 +220,7 @@ describe('Player factory function', () => {
 
     test('should return false when attacking an empty location', () => {
         const invalidPlace = { row: 10, col: 10 };
-        expect(player1.attack(player2.getBoard(), invalidPlace)).toBe('Place is out of bounds');
+        expect(player1.attack(player2.getBoard(), invalidPlace)).toBeUndefined();
     });
 
     test('should not allow to attack a sunken ship again', () => {

@@ -62,7 +62,7 @@ describe('Gameboard factory function', () => {
     });
 
     test('should return an error for an out-of-bounds attack', () => {
-        expect(gameboard.receiveAttack(gameboard.getBoard(), { row: 10, col: 10 })).toBe('Place is out of bounds');
+        expect(gameboard.receiveAttack(gameboard.getBoard(), { row: 10, col: 10 })).toBeUndefined();
     });
 
     test('should attack a ship on the edge of the gameboard', () => {

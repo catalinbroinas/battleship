@@ -12,6 +12,10 @@ function Game() {
     const getComputerName = () => player2.name;
     const getCurrentPlayerName = () => currentPlayer.name;
 
+    // Getters  for tests
+    const getPlayerBoard = () => player1.getBoard();
+    const getComputerBoard = () => player2.getBoard();
+
     const initGame = (playerName, computerName) => {
         player1 = createPlayer(playerName || 'Player', 'human');
         player2 = createPlayer(computerName || 'Computer', 'computer');
@@ -31,14 +35,19 @@ function Game() {
         const opponent = currentPlayer === player1 ? player2 : player1;
         const result = currentPlayer.attack(opponent.getBoard(), place);
 
-        if (checkWinner()) return `${getCurrentPlayerName()} win!`;
+        if (result === undefined) return;
+
+        const winner = checkWinner();
+        if (winner) return `${winner} win!`;
 
         currentPlayer = opponent;
         return result;
     };
 
     const checkWinner = () => {
-
+        if (player1.allIsSunk()) return getComputerName();
+        if (player2.allIsSunk()) return getPlayerName();
+        return false;
     };
 
     return {
@@ -49,7 +58,9 @@ function Game() {
         initGame,
         startGame,
         playerTurn,
-        checkWinner
+        checkWinner,
+        getPlayerBoard,
+        getComputerBoard
     };
 }
 

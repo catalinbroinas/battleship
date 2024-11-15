@@ -62,9 +62,11 @@ function Player(name, type) {
 
         // If it's the computer's turn, generate a random place
         if (type === 'computer') {
-            const randomRow = Math.floor(Math.random() * 10);
-            const randomCol = Math.floor(Math.random() * 10);
-            attackPlace = { row: randomRow, col: randomCol };
+            do {
+                const randomRow = Math.floor(Math.random() * 10);
+                const randomCol = Math.floor(Math.random() * 10);
+                attackPlace = { row: randomRow, col: randomCol };
+            } while (opponentBoard[attackPlace.row][attackPlace.col] === 0 || opponentBoard[attackPlace.row][attackPlace.col] === 1);
         }
 
         const status = gameboard.receiveAttack(opponentBoard, attackPlace);
