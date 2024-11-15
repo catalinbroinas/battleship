@@ -30,8 +30,8 @@ function Game() {
     const startGame = () => gameIsStarted ? true : false;
 
     const playerTurn = (place) => {
-        // Check if the game has started
-        if (!gameIsStarted) return;
+        // Check if the game has started, but not over
+        if (!gameIsStarted || gameIsOver) return;
 
         const opponent = currentPlayer === player1 ? player2 : player1;
         const result = currentPlayer.attack(opponent.getBoard(), place);
@@ -61,6 +61,11 @@ function Game() {
 
     const endGame = () => gameIsOver ? true : false;
 
+    const resetGame = (playerName = 'Player', computerName = 'Computer') => {
+        initGame(playerName, computerName);
+        gameIsOver = false;
+    };
+
     return {
         createPlayer,
         getPlayerName,
@@ -71,6 +76,7 @@ function Game() {
         playerTurn,
         checkWinner,
         endGame,
+        resetGame,
         getPlayerBoard,
         getComputerBoard
     };
