@@ -5,6 +5,7 @@ function Game() {
     let player2;
     let currentPlayer;
     let gameIsStarted = false;
+    let gameIsOver = false;
 
     const createPlayer = (name, type) => Player(name, type);
 
@@ -45,10 +46,20 @@ function Game() {
     };
 
     const checkWinner = () => {
-        if (player1.allIsSunk()) return getComputerName();
-        if (player2.allIsSunk()) return getPlayerName();
+        if (player1.allIsSunk()) {
+            gameIsOver = true;
+            return getComputerName();
+        }
+
+        if (player2.allIsSunk()) {
+            gameIsOver = true;
+            return getPlayerName();
+        }
+
         return false;
     };
+
+    const endGame = () => gameIsOver ? true : false;
 
     return {
         createPlayer,
@@ -59,6 +70,7 @@ function Game() {
         startGame,
         playerTurn,
         checkWinner,
+        endGame,
         getPlayerBoard,
         getComputerBoard
     };

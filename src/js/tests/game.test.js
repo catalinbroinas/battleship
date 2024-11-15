@@ -110,4 +110,37 @@ describe('Game factory function', () => {
 
         throw new Error('Expected a winner to be declared');
     });
+
+    test('should correctly detect winner and the game is over when all ships are sunk', () => {
+        game.initGame();
+        let winner = game.checkWinner();
+
+        expect(game.endGame()).toBe(false);
+
+        for (let row = 0; row < 10; row++) {
+            for (let col = 0; col < 10; col++) {
+                // Attack of the player
+                game.playerTurn({ row, col });
+
+                winner = game.checkWinner();
+                if (winner) {
+                    expect(winner).toBe(game.getCurrentPlayerName());
+                    expect(game.endGame()).toBe(true);
+                    return;
+                }
+
+                // Attack of the computer
+                game.playerTurn({ row, col });
+
+                winner = game.checkWinner();
+                if (winner) {
+                    expect(winner).toBe(game.getCurrentPlayerName());
+                    expect(game.endGame()).toBe(true);
+                    return;
+                }
+            }
+        }
+
+        throw new Error('Expected a winner to be declared');
+    });
 });
