@@ -143,4 +143,87 @@ describe('Game factory function', () => {
 
         throw new Error('Expected a winner to be declared');
     });
+
+    test('should prevent further moves when the game is over', () => {
+        game.initGame();
+
+        for (let row = 0; row < 10; row++) {
+            for (let col = 0; col < 10; col++) {
+                if (game.endGame()) break;
+                game.playerTurn({ row, col });
+                game.checkWinner();
+            }
+        }
+
+        expect(game.playerTurn({ row: 0, col: 0 })).toBeUndefined();
+    });
+
+    test('endGame should return false if game has not started', () => {
+        expect(game.endGame()).toBe(false);
+    });
+
+    test('should reset game state correctly', () => {
+        game.initGame();
+        let winner = game.checkWinner();
+
+        expect(game.endGame()).toBe(false);
+
+        for (let row = 0; row < 10; row++) {
+            for (let col = 0; col < 10; col++) {
+                // Attack of the player
+                game.playerTurn({ row, col });
+
+                winner = game.checkWinner();
+                if (winner) {
+                    expect(winner).toBe(game.getCurrentPlayerName());
+                    return;
+                }
+
+                // Attack of the computer
+                game.playerTurn({ row, col });
+
+                winner = game.checkWinner();
+                if (winner) {
+                    expect(winner).toBe(game.getCurrentPlayerName());
+                    return;
+                }
+            }
+        }
+
+        expect(game.endGame()).toBe(true);
+
+        expect(game.playerTurn({ row: 0, col: 0 })).toBeUndefined();
+
+        game.resetGame();
+
+        expect(game.startGame()).toBe(false);
+        expect(game.endGame()).toBe(false);
+    });
+
+    test('should alternate players after each turn', () => {
+        game.initGame();
+        const firstPlayer = game.getCurrentPlayerName();
+
+        game.playerTurn({ row: 0, col: 0 });
+        expect(game.getCurrentPlayerName()).not.toBe(firstPlayer);
+
+        game.playerTurn({ row: 1, col: 1 });
+        expect(game.getCurrentPlayerName()).toBe(firstPlayer);
+    });
+
+    test('should reset the game correctly', () => {
+        game.initGame('Player', 'Computer');
+        game.playerTurn({ row: 0, col: 0 });
+        expect(game.getCurrentPlayerName()).toBe('Computer');
+
+        game.resetGame('NewPlayer', 'NewComputer');
+
+        expect(game.getCurrentPlayerName()).toBe('NewPlayer');
+        expect(game.endGame()).toBe(false);
+    });
+
+    test('should not allow turns if game is not started or is over', () => {
+        const result = game.playerTurn({ row: 1, col: 1 });
+        expect(result).toBe(undefined);
+    });
 });
