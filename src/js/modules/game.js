@@ -4,6 +4,7 @@ function Game() {
     let player1;
     let player2;
     let currentPlayer;
+    let gameIsStarted = false;
 
     const createPlayer = (name, type) => Player(name, type);
 
@@ -17,10 +18,16 @@ function Game() {
 
         currentPlayer = player1;
 
-        return player1.placeAllShips() && player2.placeAllShips();
+        gameIsStarted = player1.placeAllShips() && player2.placeAllShips();
+        return gameIsStarted;
     };
 
+    const startGame = () => gameIsStarted ? true : false;
+
     const playerTurn = (place) => {
+        // Check if the game has started
+        if (!gameIsStarted) return;
+
         const opponent = currentPlayer === player1 ? player2 : player1;
         const result = currentPlayer.attack(opponent.getBoard(), place);
 
@@ -40,6 +47,7 @@ function Game() {
         getComputerName,
         getCurrentPlayerName,
         initGame,
+        startGame,
         playerTurn,
         checkWinner
     };
