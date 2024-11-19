@@ -6,5 +6,54 @@
     <link rel="icon" href="img/favicon.png" type="image/png" />
     <title>Battleship</title>
   </head>
-  <body></body>
+  <body>
+    <!-- Page Container -->
+    <div class="container-fluid">
+      <!-- Container -->
+      <div class="container">
+        <!-- Start Game -->
+        <form novalidate id="game-form" class="form-wrapper">
+          <!-- Title -->
+          <h1 class="title">Battleship</h1>
+
+          <!-- Player Name -->
+          <div class="form-row">
+            <input
+              type="text"
+              id="player-name"
+              class="form-control"
+              placeholder="Player name"
+              minlength="1"
+              maxlength="25"
+              autofocus
+            />
+            <label for="player-name" class="form-label">Player name</label>
+          </div>
+          <!-- Player Name -->
+
+          <!-- Computer Name -->
+          <div class="form-row">
+            <input
+              type="text"
+              id="computer-name"
+              class="form-control"
+              placeholder="Computer name"
+              minlength="1"
+              maxlength="25"
+            />
+            <label for="computer-name" class="form-label">Computer name</label>
+          </div>
+          <!-- Computer Name -->
+
+          <!-- Button -->
+          <button type="submit" id="submit-btn" class="btn-submit">
+            Start Game
+          </button>
+        </form>
+        <!-- Start Game -->
+      </div>
+      <!-- Container -->
+    </div>
+    <!-- Page Container -->
+  </body>
 </html>
