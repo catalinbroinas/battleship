@@ -30,7 +30,12 @@ function UI() {
     };
 
     const initGame = () => {
+        const { playerName, computerName } = getPlayerNames();
+        const result = game.initGame(playerName, computerName);
 
+        if (!result) {
+            throw new Error('Failed to initialize the game. Please check player names or game setup.');
+        }
     };
 
     const renderGameBoard = () => {
