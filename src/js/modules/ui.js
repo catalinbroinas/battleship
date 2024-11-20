@@ -10,10 +10,19 @@ function UI() {
     const computerNameInput = document.querySelector('#computer-name');
     const startGameButton = document.querySelector('#submit-btn');
 
-    const getPlayerNames = () => ({
-        playerName: playerNameInput.value.trim() || 'Player',
-        computerName: computerNameInput.value.trim() || 'Computer'
-    });
+    const getPlayerNames = () => {
+        if (!playerNameInput) {
+            throw new Error('Player name field not found');
+        }
+        if (!computerNameInput) {
+            throw new Error('Computer name field not found');
+        }
+
+        return {
+            playerName: playerNameInput.value.trim() || 'Player',
+            computerName: computerNameInput.value.trim() || 'Computer'
+        };
+    };
 
     const resetForm = () => {
         playerNameInput.value = '';
