@@ -9,3 +9,9 @@ import '@fortawesome/fontawesome-free/css/solid.css';
 import { Ship } from './modules/ship';
 import { Gameboard } from './modules/gameboard';
 import { Player } from './modules/player';
+import { UI } from './modules/ui';
+
+window.addEventListener('DOMContentLoaded', () => {
+    const ui = UI();
+    ui.startGame();
+});
