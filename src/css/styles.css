@@ -229,6 +229,16 @@ ul {
   border: 1px solid #607d8b;
 }
 
+.cell.ship {
+  background-color: #607d8b;
+}
+.cell.attacked {
+  background-color: #ae1919;
+}
+.cell.ship.attacked {
+  background-color: #199e19;
+}
+
 @media only screen and (max-width: 1356px) {
   .cell {
     width: 2rem;

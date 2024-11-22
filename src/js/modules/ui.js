@@ -93,6 +93,11 @@ function UI() {
                         'data-col': colIndex
                     }
                 });
+
+                if (typeof colData === 'object' && colData !== null) {
+                    cell.classList.add('ship');
+                }
+
                 line.appendChild(cell);
             });
 
