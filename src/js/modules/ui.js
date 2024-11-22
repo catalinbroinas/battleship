@@ -1,8 +1,10 @@
 import { Game } from './game';
+import { DomUtilityManager } from './utility';
 
 function UI() {
-    // Instance of game module
+    // Instance of game module and DOM manager
     const game = Game();
+    const domManager = DomUtilityManager();
 
     // Select elements
     const form = document.querySelector('#game-form');
@@ -38,8 +40,39 @@ function UI() {
         }
     };
 
-    const renderGameBoard = () => {
+    const renderGameBoard = (board, type) => {
+        if (!Array.isArray(board) || !board.every(Array.isArray)) {
+            throw new Error('Invalid board structure');
+        }
 
+        const container = domManager.createDOMElement({
+            elementTag: 'div',
+            elementClass: ['gameboard'],
+            elementAttributes: { id: `gameboard-${type}` }
+        });
+
+        board.forEach((rowData, rowIndex) => {
+            const line = domManager.createDOMElement({
+                elementTag: 'div',
+                elementClass: ['row']
+            });
+
+            rowData.forEach((colData, colIndex) => {
+                const cell = domManager.createDOMElement({
+                    elementTag: 'div',
+                    elementClass: ['cell'],
+                    elementAttributes: {
+                        'data-row': rowIndex,
+                        'data-col': colIndex
+                    }
+                });
+                line.appendChild(cell);
+            });
+
+            container.appendChild(line);
+        });
+
+        return container;
     };
 
     const handleCellClick = (event) => {
