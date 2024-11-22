@@ -112,6 +112,15 @@ ul {
   z-index: 2;
 }
 
+.gameboard-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 3rem;
+  z-index: 2;
+}
+
 /* Typography */
 .title {
   color: #fff;
@@ -196,4 +205,39 @@ ul {
   background-color: #546e7a;
   color: #fff;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Gameboard */
+.gameboard {
+  position: relative;
+  background-color: #263238;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0 30px 0.0625rem rgba(0, 0, 0, 0.3019607843);
+  z-index: 3;
+}
+
+.gameboard .row {
+  display: flex;
+}
+
+.cell {
+  width: 3rem;
+  height: 3rem;
+  background-color: #eceff1;
+  border: 1px solid #607d8b;
+}
+
+@media only screen and (max-width: 1356px) {
+  .cell {
+    width: 2rem;
+    height: 2rem;
+  }
+}
+
+@media only screen and (max-width: 991px) {
+  .gameboard-wrapper {
+    flex-wrap: wrap;
+  }
 }

@@ -7,6 +7,7 @@ function UI() {
     const domManager = DomUtilityManager();
 
     // Select elements
+    const pageContainer = document.querySelector('#page-container');
     const form = document.querySelector('#game-form');
     const playerNameInput = document.querySelector('#player-name');
     const computerNameInput = document.querySelector('#computer-name');
@@ -26,11 +27,6 @@ function UI() {
         };
     };
 
-    const resetForm = () => {
-        playerNameInput.value = '';
-        computerNameInput.value = '';
-    };
-
     const initGame = () => {
         const { playerName, computerName } = getPlayerNames();
         const result = game.initGame(playerName, computerName);
@@ -38,6 +34,37 @@ function UI() {
         if (!result) {
             throw new Error('Failed to initialize the game. Please check player names or game setup.');
         }
+
+        return true;
+    };
+
+    const renderGame = () => {
+        if (!pageContainer) {
+            throw new Error('Page container element not found.');
+        }
+
+        const gameboardContainer = domManager.createDOMElement({
+            elementTag: 'div',
+            elementClass: ['gameboard-wrapper'],
+            elementAttributes: { 'id': 'gameboard-wrapper' }
+        });
+
+        const playerBoard = renderGameBoard(game.getPlayerBoard(), 'player');
+        if (playerBoard) {
+            gameboardContainer.appendChild(playerBoard);
+        } else {
+            throw new Error('Failed to render the player`s gameboard.');
+        }
+
+        const computerBoard = renderGameBoard(game.getComputerBoard(), 'computer');
+        if (computerBoard) {
+            gameboardContainer.appendChild(computerBoard);
+        } else {
+            throw new Error('Failed to render the computer`s gameboard.');
+        }
+
+        domManager.clearPageContent(pageContainer);
+        pageContainer.appendChild(gameboardContainer);
     };
 
     const renderGameBoard = (board, type) => {
@@ -94,8 +121,7 @@ function UI() {
 
         form.addEventListener('submit', (event) => {
             event.preventDefault();
-            initGame();
-            resetForm();
+            if (initGame()) renderGame();
         });
     };
 
