@@ -78,6 +78,17 @@ function UI() {
             elementAttributes: { id: `gameboard-${type}` }
         });
 
+        const name = type === 'player'
+            ? getPlayerNames().playerName : getPlayerNames().computerName;
+
+        const title = domManager.createDOMElement({
+            elementTag: 'div',
+            elementClass: ['sub-title'],
+            elementText: `${name}`
+        });
+
+        container.appendChild(title);
+
         board.forEach((rowData, rowIndex) => {
             const line = domManager.createDOMElement({
                 elementTag: 'div',
