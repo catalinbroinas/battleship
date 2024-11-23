@@ -109,6 +109,11 @@ function UI() {
                     cell.classList.add('ship');
                 }
 
+                if (type === 'computer') {
+                    const clickHandler = (event) => handleCellClick({ row: rowIndex, col: colIndex }, cell, clickHandler);
+                    cell.addEventListener('click', clickHandler);
+                }
+
                 line.appendChild(cell);
             });
 
@@ -118,7 +123,42 @@ function UI() {
         return container;
     };
 
-    const handleCellClick = (event) => {
+    const handleCellClick = (place, cell, clickHandler) => {
+        if (typeof place !== 'object' || place === null) {
+            throw new Error('Invalid place.');
+        }
+
+        const result = game.playerTurn(place);
+
+        if (result === false || result === true) {
+            cell.classList.add('attacked');
+            cell.removeEventListener('click', clickHandler);
+
+            const computerAttack = game.playerTurn();
+
+            if (computerAttack === false || computerAttack === true) {
+                updateGameboard();
+            }
+
+            if (typeof computerAttack === 'string') {
+                updateGameboard();
+                console.log(computerAttack);
+                displayMessage(computerAttack);
+            }
+
+            console.log(game.getComputerBoard());
+            console.log(game.getPlayerBoard());
+        } else if (typeof result === 'string') {
+            cell.classList.add('attacked');
+            cell.removeEventListener('click', clickHandler);
+            displayMessage(result);
+            console.log(result);
+        } else {
+            throw new Error(`Error: ${result}`);
+        }
+    };
+
+    const updateGameboard = () => {
 
     };
 
