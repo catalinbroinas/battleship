@@ -128,42 +128,64 @@ function UI() {
             throw new Error('Invalid place.');
         }
 
-        const result = game.playerTurn(place);
+        // Player attack
+        const playerAttack = game.playerTurn(place);
 
-        if (result === false || result === true) {
+        if (playerAttack === true || playerAttack === false) {
             cell.classList.add('attacked');
             cell.removeEventListener('click', clickHandler);
-
-            const computerAttack = game.playerTurn();
-
-            if (computerAttack === false || computerAttack === true) {
-                updateGameboard();
-            }
-
-            if (typeof computerAttack === 'string') {
-                updateGameboard();
-                console.log(computerAttack);
-                displayMessage(computerAttack);
-            }
-
-            console.log(game.getComputerBoard());
-            console.log(game.getPlayerBoard());
-        } else if (typeof result === 'string') {
+        } else if (typeof playerAttack === 'string') {
             cell.classList.add('attacked');
             cell.removeEventListener('click', clickHandler);
-            displayMessage(result);
-            console.log(result);
+            console.log(playerAttack);  // Fo test it
+            return;
         } else {
-            throw new Error(`Error: ${result}`);
+            throw new Error(`Unexpected result from playerTurn: ${playerAttack}`);
+        }
+
+        // Computer attack
+        const computerAttack = game.playerTurn();
+
+        if (computerAttack === true || computerAttack === false) {
+            const playerBoard = game.getPlayerBoard();
+            updateCell(playerBoard, 'player');
+        } else if (typeof computerAttack === 'string') {
+            const playerBoard = game.getPlayerBoard();
+            updateCell(playerBoard, 'player');
+            console.log(computerAttack);    // Fo test it
+            return;
+        } else {
+            throw new Error(`Unexpected result from playerTurn (computer): ${computerAttack}`);
         }
     };
 
-    const updateGameboard = () => {
+    const updateCell = (board, type) => {
+        if (!Array.isArray(board) || !board.every(Array.isArray)) {
+            throw new Error('Invalid board structure.');
+        }
 
-    };
+        const gameboardElement = document.querySelector(`#gameboard-${type}`);
+        if (!gameboardElement) {
+            throw new Error(`Gameboard element for type "${type}" not found.`);
+        }
 
-    const updateCell = (cell, result) => {
+        // Traverse each cell in the board and compare to the DOM
+        board.forEach((rowData, rowIndex) => {
+            rowData.forEach((cellData, colIndex) => {
+                const cellElement = gameboardElement.querySelector(
+                    `.cell[data-row="${rowIndex}"][data-col="${colIndex}"]`
+                );
 
+                if (!cellElement) {
+                    throw new Error(`Cell element at [${rowIndex}, ${colIndex}] not found.`);
+                }
+
+                // Update the attacked cells
+                if (cellData === 0 || cellData === 1) {
+                    cellElement.classList.add('attacked');
+                }
+            });
+        });
     };
 
     const displayMessage = (message) => {
