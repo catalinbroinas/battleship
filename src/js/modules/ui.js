@@ -128,34 +128,46 @@ function UI() {
             throw new Error('Invalid place.');
         }
 
-        // Player attack
-        const playerAttack = game.playerTurn(place);
+        const playerAttack = () => {
+            const result = game.playerTurn(place);
 
-        if (playerAttack === true || playerAttack === false) {
-            cell.classList.add('attacked');
-            cell.removeEventListener('click', clickHandler);
-        } else if (typeof playerAttack === 'string') {
-            cell.classList.add('attacked');
-            cell.removeEventListener('click', clickHandler);
-            console.log(playerAttack);  // Fo test it
-            return;
-        } else {
-            throw new Error(`Unexpected result from playerTurn: ${playerAttack}`);
-        }
+            if (result === true || result === false) {
+                cell.classList.add('attacked');
+                cell.removeEventListener('click', clickHandler);
+                return true;
+            } else if (typeof result === 'string') {
+                cell.classList.add('attacked');
+                cell.removeEventListener('click', clickHandler);
+                console.log(result);  // Fo test it
+                return false;
+            } else {
+                throw new Error(`Unexpected result from playerTurn: ${playerAttack}`);
+            }
+        };
 
-        // Computer attack
-        const computerAttack = game.playerTurn();
+        const computerAttack = () => {
+            const result = game.playerTurn();
 
-        if (computerAttack === true || computerAttack === false) {
-            const playerBoard = game.getPlayerBoard();
-            updateCell(playerBoard, 'player');
-        } else if (typeof computerAttack === 'string') {
-            const playerBoard = game.getPlayerBoard();
-            updateCell(playerBoard, 'player');
-            console.log(computerAttack);    // Fo test it
-            return;
-        } else {
-            throw new Error(`Unexpected result from playerTurn (computer): ${computerAttack}`);
+            if (result === true || result === false) {
+                const playerBoard = game.getPlayerBoard();
+                updateCell(playerBoard, 'player');
+                return true;
+            } else if (typeof result === 'string') {
+                const playerBoard = game.getPlayerBoard();
+                updateCell(playerBoard, 'player');
+                console.log(result);    // Fo test it
+                return false;
+            } else {
+                throw new Error(`Unexpected result from playerTurn (computer): ${computerAttack}`);
+            }
+        };
+
+        try {
+            if (playerAttack()) {
+                computerAttack();
+            }
+        } catch (error) {
+            throw error;
         }
     };
 
