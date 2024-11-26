@@ -62,8 +62,13 @@ function Game() {
     const endGame = () => gameIsOver ? true : false;
 
     const resetGame = (playerName = 'Player', computerName = 'Computer') => {
-        initGame(playerName, computerName);
-        gameIsOver = false;
+        const result = initGame(playerName, computerName);
+        if (result) {
+            gameIsOver = false;
+            return true;
+        }
+
+        return false;
     };
 
     return {

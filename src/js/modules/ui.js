@@ -250,8 +250,29 @@ function UI() {
         return true;
     };
 
+    // Restart the game with initial set up
     const resetGame = () => {
+        if (!game.endGame()) {
+            throw new Error('Cannot restart the game. The game is still ongoing.');
+        }
 
+        // Get player names
+        const { playerName, computerName } = getPlayerNames();
+        if (!playerName || !computerName) {
+            throw new Error('Failed to retrieve player names for game reset.');
+        }
+
+        // Reset the game
+        const isGameReset = game.resetGame(playerName, computerName);
+        if (!isGameReset) {
+            throw new Error('Game reset failed. Could not initialize a new game instance.');
+        }
+
+        try {
+            renderGame();
+        } catch (error) {
+            throw error;
+        }
     };
 
     return {
