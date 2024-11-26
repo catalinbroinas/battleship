@@ -98,7 +98,8 @@ ul {
   width: min(1320px, 100%);
 }
 
-.form-wrapper {
+.form-wrapper,
+.endGame-wrapper {
   position: relative;
   margin: auto;
   background-color: #263238;
@@ -195,7 +196,9 @@ ul {
   border-image-slice: 1;
 }
 
-.btn-submit {
+.btn-submit,
+.btn-playAgain,
+.btn-reset {
   display: inline-flex;
   border: none;
   padding: 10px 20px;
@@ -209,10 +212,24 @@ ul {
   transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
 }
 
+.btn-reset {
+  background-color: #fff;
+  color: #607d8b;
+}
+
 .btn-submit:hover,
-.btn-submit:active {
+.btn-playAgain:hover,
+.btn-submit:active,
+.btn-playAgain {
   background-color: #546e7a;
   color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.btn-reset:hover,
+.btn-reset:active {
+  background-color: white;
+  color: #546e7a;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 

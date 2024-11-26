@@ -47,9 +47,41 @@ function DomUtilityManager() {
         return element;
     };
 
+    const createButton = ({ name, title, buttonClass, iconClass, clickHandler }) => {
+        const button = document.createElement('button');
+
+        if (buttonClass) {
+            buttonClass.forEach(className => button.classList.add(className));
+        }
+
+        if (iconClass) {
+            const buttonIcon = document.createElement('i');
+            iconClass.forEach(className => buttonIcon.classList.add(className));
+
+            button.appendChild(buttonIcon);
+            if (name) {
+                button.insertAdjacentText('beforeend', name);
+            }
+        } else {
+            button.textContent = name;
+        }
+
+        button.setAttribute('type', 'button');
+        if (title) {
+            button.setAttribute('title', title);
+        }
+
+        if (clickHandler) {
+            button.addEventListener('click', clickHandler);
+        }
+
+        return button;
+    };
+
     return {
         clearPageContent,
-        createDOMElement
+        createDOMElement,
+        createButton
     };
 }
 

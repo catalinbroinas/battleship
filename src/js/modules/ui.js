@@ -128,6 +128,14 @@ function UI() {
             throw new Error('Invalid place.');
         }
 
+        const handleEndGame = (result) => {
+            if (typeof result === 'string' && endGame(result)) {
+                return false;
+            }
+
+            return true;
+        };
+
         const playerAttack = () => {
             const result = game.playerTurn(place);
 
@@ -135,14 +143,11 @@ function UI() {
                 cell.classList.add('attacked');
                 cell.removeEventListener('click', clickHandler);
                 return true;
-            } else if (typeof result === 'string') {
-                cell.classList.add('attacked');
-                cell.removeEventListener('click', clickHandler);
-                console.log(result);  // Fo test it
-                return false;
-            } else {
-                throw new Error(`Unexpected result from playerTurn: ${playerAttack}`);
             }
+
+            cell.classList.add('attacked');
+            cell.removeEventListener('click', clickHandler);
+            return handleEndGame(result);
         };
 
         const computerAttack = () => {
@@ -152,20 +157,15 @@ function UI() {
                 const playerBoard = game.getPlayerBoard();
                 updateCell(playerBoard, 'player');
                 return true;
-            } else if (typeof result === 'string') {
-                const playerBoard = game.getPlayerBoard();
-                updateCell(playerBoard, 'player');
-                console.log(result);    // Fo test it
-                return false;
-            } else {
-                throw new Error(`Unexpected result from playerTurn (computer): ${computerAttack}`);
             }
+
+            const playerBoard = game.getPlayerBoard();
+            updateCell(playerBoard, 'player');
+            return handleEndGame(result);
         };
 
         try {
-            if (playerAttack()) {
-                computerAttack();
-            }
+            if (playerAttack()) computerAttack();
         } catch (error) {
             throw error;
         }
@@ -215,8 +215,39 @@ function UI() {
         });
     };
 
-    const endGame = () => {
+    const endGame = (message = 'Game Over!') => {
+        if (!game.endGame()) return false;
 
+        const container = domManager.createDOMElement({
+            elementTag: 'div',
+            elementClass: ['endGame-wrapper']
+        });
+
+        const messageElement = domManager.createDOMElement({
+            elementTag: 'p',
+            elementClass: ['sub-title'],
+            elementText: message
+        });
+        container.appendChild(messageElement);
+
+        const playAgainButton = domManager.createButton({
+            name: 'Play Again',
+            buttonClass: ['btn-playAgain'],
+            clickHandler: () => resetGame()
+        });
+        container.appendChild(playAgainButton);
+
+        const resetGameButton = domManager.createButton({
+            name: 'Reset Game',
+            buttonClass: ['btn-reset'],
+            clickHandler: () => location.reload()
+        });
+        container.appendChild(resetGameButton);
+
+        domManager.clearPageContent(pageContainer);
+        pageContainer.appendChild(container);
+
+        return true;
     };
 
     const resetGame = () => {
