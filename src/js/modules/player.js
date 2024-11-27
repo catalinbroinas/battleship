@@ -36,8 +36,13 @@ function Player(name, type) {
 
                 const place = { row: randomRow, col: randomCol };
 
+                // Select orientation
+                const randomOrientation = Math.floor(Math.random() * 2);
+                const validOrientations = ['horizontal', 'vertical'];
+                const orientation = validOrientations[randomOrientation];
+
                 // Attempt to place the ship at the generated position
-                placed = gameboard.placeShip(ship, place);
+                placed = gameboard.placeShip(ship, place, orientation);
             }
         });
 
