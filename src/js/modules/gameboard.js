@@ -12,7 +12,7 @@ function Gameboard() {
     const getBoard = () => board;
 
     // Places a ship on the gameboard at the specified location
-    const placeShip = (ship, place) => {
+    const placeShip = (ship, place, orientation = 'horizontal') => {
         const { row, col } = place;
         const { length } = ship;
 
@@ -24,20 +24,44 @@ function Gameboard() {
             return 'Place is out of bounds';
         }
 
-        // Check if the ship fits in the space on the board
-        if (col + length > board[0].length) {
-            return 'Ship does not fit in the selected space';
+        // Validate the orientation
+        const validOrientations = ['horizontal', 'vertical'];
+        if (!validOrientations.includes(orientation)) {
+            return 'Choose between horizontal or vertical orientation.';
         }
 
-        // Check if the space is already occupied by another ship
-        const occupiedPlace = Array.from({ length }, (_, i) => board[row][col + i]
-        ).some((cell) => cell !== null);
-        if (occupiedPlace) {
-            return 'This place is already occupied';
+        if (orientation === 'horizontal') {
+            // Check if the ship fits in the space on the board
+            if (col + length > board[0].length) {
+                return 'Ship does not fit in the selected space';
+            }
+
+            // Check if the space is already occupied by another ship
+            const occupiedPlace = Array.from({ length }, (_, i) => board[row][col + i]
+            ).some((cell) => cell !== null);
+            if (occupiedPlace) {
+                return 'This place is already occupied';
+            }
+
+            // Place the ship on the board
+            Array.from({ length }, (_, i) => board[row][col + i] = ship);
+        } else {
+            // Check if the ship fits in the space on the board
+            if (row + length > board.length) {
+                return 'Ship does not fit in the selected space';
+            }
+
+            // Check if the space is already occupied by another ship
+            const occupiedPlace = Array.from({ length }, (_, i) => board[row + i][col]
+            ).some((cell) => cell !== null);
+            if (occupiedPlace) {
+                return 'This place is already occupied';
+            }
+
+            // Place the ship on the board
+            Array.from({ length }, (_, i) => board[row + i][col] = ship);
         }
 
-        // Place the ship on the board
-        Array.from({ length }, (_, i) => board[row][col + i] = ship);
         return true;
     };
 

@@ -144,4 +144,55 @@ describe('Gameboard factory function', () => {
         expect(gameboard.receiveAttack(gameboard.getBoard(), place)).toBe(undefined);
         expect(gameboard.getBoard()[0][0]).toBe(1);
     });
+
+    test('should place two ships on the gameboard in horizontal orientation', () => {
+        const place1 = { row: 0, col: 0 };
+        const place2 = { row: 1, col: 0 };
+        expect(gameboard.placeShip(carrier, place1, 'horizontal')).toBe(true);
+        expect(gameboard.placeShip(destroyer, place2, 'horizontal')).toBe(true);
+
+        expect(gameboard.getBoard()[0][0]).toBe(carrier);
+        expect(gameboard.getBoard()[0][1]).toBe(carrier);
+        expect(gameboard.getBoard()[0][2]).toBe(carrier);
+
+        expect(gameboard.getBoard()[1][0]).toBe(destroyer);
+        expect(gameboard.getBoard()[1][1]).toBe(destroyer);
+    });
+
+    test('should place two ships on the gameboard in vertical orientation', () => {
+        const place1 = { row: 0, col: 0 };
+        const place2 = { row: 0, col: 1 };
+        expect(gameboard.placeShip(carrier, place1, 'vertical')).toBe(true);
+        expect(gameboard.placeShip(destroyer, place2, 'vertical')).toBe(true);
+
+        expect(gameboard.getBoard()[0][0]).toBe(carrier);
+        expect(gameboard.getBoard()[1][0]).toBe(carrier);
+        expect(gameboard.getBoard()[2][0]).toBe(carrier);
+
+        expect(gameboard.getBoard()[0][1]).toBe(destroyer);
+        expect(gameboard.getBoard()[1][1]).toBe(destroyer);
+    });
+
+    test('should not place a ship if it does not fit in the space (vertical orientation)', () => {
+        const place = { row: 8, col: 0 };
+        expect(gameboard.placeShip(carrier, place, 'horizontal')).toBe(true);
+        expect(gameboard.placeShip(carrier, place, 'vertical')).toBe('Ship does not fit in the selected space');
+    });
+
+    test('should not place a ship if the space is already occupied (vertical orientation)', () => {
+        const place1 = { row: 0, col: 0 };
+        const place2 = { row: 1, col: 0 };
+        gameboard.placeShip(carrier, place1, 'vertical');
+        expect(gameboard.placeShip(destroyer, place2, 'vertical')).toBe('This place is already occupied');
+    });
+
+    test('should place a ship on the edge of the gameboard', () => {
+        const place = { row: 7, col: 0 };
+        expect(gameboard.placeShip(carrier, place, 'vertical')).toBe(true);
+    });
+
+    test('should not place a ship if the orientation is not correctly specified', () => {
+        const place = { row: 7, col: 0 };
+        expect(gameboard.placeShip(carrier, place, 'landscape')).toBe('Choose between horizontal or vertical orientation.');
+    });
 });
