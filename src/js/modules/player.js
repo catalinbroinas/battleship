@@ -7,6 +7,10 @@ function Player(name, type) {
     // Gameboard of the player
     const board = gameboard.getBoard();
 
+    // Save available place and adjacent place for enhance computer attack
+    const unattackedPlace = [];
+    const priorityPlace = [];
+
     const getBoard = () => board;
 
     // List of ships
@@ -65,13 +69,23 @@ function Player(name, type) {
     const attack = (opponentBoard, place) => {
         let attackPlace = place;
 
+        const initValidPlace = () => {
+            opponentBoard.forEach((rowData, rowIndex) => {
+                rowData.forEach((colData, colIndex) => {
+                    unattackedPlace.push({ row: rowIndex, col: colIndex });
+                });
+            });
+        }
+
         // If it's the computer's turn, generate a random place
         if (type === 'computer') {
-            do {
-                const randomRow = Math.floor(Math.random() * 10);
-                const randomCol = Math.floor(Math.random() * 10);
-                attackPlace = { row: randomRow, col: randomCol };
-            } while (opponentBoard[attackPlace.row][attackPlace.col] === 0 || opponentBoard[attackPlace.row][attackPlace.col] === 1);
+            if (unattackedPlace.length === 0) {
+                initValidPlace();
+            }
+
+            // Select a random cell from `unattackedPlace`
+            const randomIndex = Math.floor(Math.random() * unattackedPlace.length);
+            attackPlace = unattackedPlace.splice(randomIndex, 1)[0];
         }
 
         const status = gameboard.receiveAttack(opponentBoard, attackPlace);
