@@ -69,6 +69,7 @@ function Player(name, type) {
     const attack = (opponentBoard, place) => {
         let attackPlace = place;
 
+        // Initialize the list of unattacked places with all valid board positions
         const initValidPlace = () => {
             opponentBoard.forEach((rowData, rowIndex) => {
                 rowData.forEach((colData, colIndex) => {
@@ -77,7 +78,9 @@ function Player(name, type) {
             });
         };
 
+        // Add adjacent valid positions of a successful attack to the priority list
         const insertPriorityPlace = (target) => {
+            // Define adjacent directions and ensure they stay within board bounds
             const directions = [
                 { row: target.row, col: target.col + 1 },
                 { row: target.row, col: target.col - 1 },
@@ -86,12 +89,12 @@ function Player(name, type) {
             ].filter(item => item.row >= 0 && item.row < 10 && item.col >= 0 && item.col < 10);;
 
             directions.forEach(item => {
-                // Check if the place is valid
+                // Check if the adjacent position is still unattacked
                 const validPlaceIndex = unattackedPlace.findIndex(
                     cell => cell.row === item.row && cell.col === item.col
                 );
 
-                // If the place is valid, add to priority and remove from un attacked list
+                // If valid, add to priority list and remove from unattacked list
                 if (validPlaceIndex !== -1) {
                     priorityPlace.push(item);
                     unattackedPlace.splice(validPlaceIndex, 1);
@@ -99,25 +102,28 @@ function Player(name, type) {
             });
         };
 
-        // If it's the computer's turn, generate a random place
+        // Generate attack place for computer
         if (type === 'computer') {
+            // Initialize the list of unattacked places if it's empty
             if (unattackedPlace.length === 0) {
                 initValidPlace();
             }
 
-            // Attack the places with priority, if it exist
+            // Prioritize attacking places near successful hits
             if (priorityPlace.length > 0) {
-                // Attack the first place from the priority list
+                // Get the first priority place
                 attackPlace = priorityPlace.shift();
             } else {
-                // Attack a random place
+                // If no priority place, attack a random position
                 const randomIndex = Math.floor(Math.random() * unattackedPlace.length);
                 attackPlace = unattackedPlace.splice(randomIndex, 1)[0];
             }
         }
 
+        // Perform the attack on the chosen place
         const status = gameboard.receiveAttack(opponentBoard, attackPlace);
 
+        // If the attack hits, add adjacent positions to the priority list
         if (status === 1 && type === 'computer') {
             insertPriorityPlace(attackPlace);
         }
