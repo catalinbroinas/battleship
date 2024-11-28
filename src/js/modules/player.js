@@ -75,7 +75,29 @@ function Player(name, type) {
                     unattackedPlace.push({ row: rowIndex, col: colIndex });
                 });
             });
-        }
+        };
+
+        const insertPriorityPlace = (target) => {
+            const directions = [
+                { row: target.row, col: target.col + 1 },
+                { row: target.row, col: target.col - 1 },
+                { row: target.row + 1, col: target.col },
+                { row: target.row - 1, col: target.col }
+            ];
+
+            directions.forEach(item => {
+                // Check if the place is valid
+                const validPlaceIndex = unattackedPlace.findIndex(
+                    cell => cell.row === item.row && cell.col === item.col
+                );
+
+                // If the place is valid, add to priority and remove from un attacked list
+                if (validPlaceIndex !== -1) {
+                    priorityPlace.push(item);
+                    unattackedPlace.splice(validPlaceIndex, 1);
+                }
+            });
+        };
 
         // If it's the computer's turn, generate a random place
         if (type === 'computer') {
@@ -83,12 +105,21 @@ function Player(name, type) {
                 initValidPlace();
             }
 
-            // Select a random cell from `unattackedPlace`
-            const randomIndex = Math.floor(Math.random() * unattackedPlace.length);
-            attackPlace = unattackedPlace.splice(randomIndex, 1)[0];
+            // Attack the places with priority, if it exist
+            if (priorityPlace.length > 0) {
+                const randomIndex = Math.floor(Math.random() * priorityPlace.length);
+                attackPlace = priorityPlace.splice(randomIndex, 1)[0];
+            } else {
+                const randomIndex = Math.floor(Math.random() * unattackedPlace.length);
+                attackPlace = unattackedPlace.splice(randomIndex, 1)[0];
+            }
         }
 
         const status = gameboard.receiveAttack(opponentBoard, attackPlace);
+
+        if (status === 1 && type === 'computer') {
+            insertPriorityPlace(attackPlace);
+        }
 
         if (status === 0) return false;
         if (status === 1) return true;
