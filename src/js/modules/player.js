@@ -10,6 +10,7 @@ function Player(name, type) {
     // Save available place and adjacent place for enhance computer attack
     const unattackedPlace = [];
     const priorityPlace = [];
+    let previousSuccessAttack = null;
 
     const getBoard = () => board;
 
@@ -131,6 +132,33 @@ function Player(name, type) {
             });
         };
 
+        // Continue attacking in a specific direction
+        const continueAttackInDirection = (current, previous) => {
+            const direction = {
+                row: current.row - previous.row,
+                col: current.col - previous.col
+            };
+
+            const nextPosition = {
+                row: current.row + direction.row,
+                col: current.col + direction.col
+            };
+
+            if (
+                nextPosition.row >= 0 && nextPosition.row < 10 &&
+                nextPosition.col >= 0 && nextPosition.col < 10
+            ) {
+                const validPlaceIndex = unattackedPlace.findIndex(
+                    cell => cell.row === nextPosition.row && cell.col === nextPosition.col
+                );
+
+                if (validPlaceIndex !== -1) {
+                    priorityPlace.unshift(nextPosition);
+                    unattackedPlace.splice(validPlaceIndex, 1);
+                }
+            }
+        };
+
         // Generate attack place for computer
         if (type === 'computer') {
             // Initialize the list of unattacked places if it's empty
@@ -152,9 +180,17 @@ function Player(name, type) {
         // Perform the attack on the chosen place
         const status = gameboard.receiveAttack(opponentBoard, attackPlace);
 
-        // If the attack hits, add adjacent positions to the priority list
+        // Handle successful attacks
         if (status === 1 && type === 'computer') {
-            insertPriorityPlace(attackPlace);
+            if (priorityPlace.length > 0) {
+                // Continue on the same direction
+                continueAttackInDirection(attackPlace, previousSuccessAttack);
+                previousSuccessAttack = attackPlace;
+            } else {
+                // The first hit - add direction
+                insertPriorityPlace(attackPlace);
+                previousSuccessAttack = attackPlace;
+            }
         }
 
         if (status === 0) return false;
