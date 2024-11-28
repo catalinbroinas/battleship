@@ -30,20 +30,49 @@ function Player(name, type) {
         const clear = board.every(row => row.every(cell => cell === null));
         if (!clear) return false;
 
+        const isAdjacentCellFree = (target) => {
+            // Adjacent direction
+            const directions = [
+                { row: target.row, col: target.col + 1 },
+                { row: target.row, col: target.col - 1 },
+                { row: target.row + 1, col: target.col },
+                { row: target.row - 1, col: target.col },
+                { row: target.row + 1, col: target.col + 1 },
+                { row: target.row + 1, col: target.col - 1 },
+                { row: target.row - 1, col: target.col + 1 },
+                { row: target.row - 1, col: target.col - 1 }
+            ];
+
+            // Check every direction
+            const result = directions.every(item => {
+                const { row, col } = item;
+                return row >= 0 && row < 10 && col >= 0 && col < 10 && board[row][col] === null;
+            });
+
+            return result;
+        };
+
+        const randomPlace = () => {
+            const randomRow = Math.floor(Math.random() * 10);
+            const randomCol = Math.floor(Math.random() * 10);
+
+            const place = { row: randomRow, col: randomCol };
+            return place;
+        };
+
         ships.forEach((ship) => {
             let placed = false;
 
             // Keep trying until the ship is placed correctly
             while (placed !== true) {
-                const randomRow = Math.floor(Math.random() * 10);
-                const randomCol = Math.floor(Math.random() * 10);
+                let place = randomPlace();
 
-                const place = { row: randomRow, col: randomCol };
+                while (isAdjacentCellFree(place) !== true) {
+                    place = randomPlace()
+                }
 
                 // Select orientation
-                const randomOrientation = Math.floor(Math.random() * 2);
-                const validOrientations = ['horizontal', 'vertical'];
-                const orientation = validOrientations[randomOrientation];
+                const orientation = Math.random() < 0.5 ? 'horizontal' : 'vertical';
 
                 // Attempt to place the ship at the generated position
                 placed = gameboard.placeShip(ship, place, orientation);
