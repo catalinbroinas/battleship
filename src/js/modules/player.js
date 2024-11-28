@@ -83,7 +83,7 @@ function Player(name, type) {
                 { row: target.row, col: target.col - 1 },
                 { row: target.row + 1, col: target.col },
                 { row: target.row - 1, col: target.col }
-            ];
+            ].filter(item => item.row >= 0 && item.row < 10 && item.col >= 0 && item.col < 10);;
 
             directions.forEach(item => {
                 // Check if the place is valid
@@ -107,9 +107,10 @@ function Player(name, type) {
 
             // Attack the places with priority, if it exist
             if (priorityPlace.length > 0) {
-                const randomIndex = Math.floor(Math.random() * priorityPlace.length);
-                attackPlace = priorityPlace.splice(randomIndex, 1)[0];
+                // Attack the first place from the priority list
+                attackPlace = priorityPlace.shift();
             } else {
+                // Attack a random place
                 const randomIndex = Math.floor(Math.random() * unattackedPlace.length);
                 attackPlace = unattackedPlace.splice(randomIndex, 1)[0];
             }
