@@ -13,7 +13,6 @@ function Game() {
     const getComputerName = () => player2.name;
     const getCurrentPlayerName = () => currentPlayer.name;
 
-    // Getters  for tests
     const getPlayerBoard = () => player1.getBoard();
     const getComputerBoard = () => player2.getBoard();
 
@@ -30,7 +29,6 @@ function Game() {
     const startGame = () => gameIsStarted ? true : false;
 
     const playerTurn = (place) => {
-        // Check if the game has started, but not over
         if (!gameIsStarted || gameIsOver) return;
 
         const opponent = currentPlayer === player1 ? player2 : player1;
@@ -56,7 +54,7 @@ function Game() {
             return getPlayerName();
         }
 
-        return false;
+        return null;
     };
 
     const endGame = () => gameIsOver ? true : false;

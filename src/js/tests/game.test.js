@@ -84,7 +84,7 @@ describe('Game factory function', () => {
         game.initGame('Player', 'Computer');
         let winner = game.checkWinner();
 
-        expect(winner).toBe(false);
+        expect(winner).toBe(null);
 
         for (let row = 0; row < 10; row++) {
             for (let col = 0; col < 10; col++) {
