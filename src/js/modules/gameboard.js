@@ -1,5 +1,3 @@
-import { Ship } from "./ship";
-
 function Gameboard() {
     const initGameboard = () => {
         const rows = 10;
@@ -9,6 +7,10 @@ function Gameboard() {
 
     const board = initGameboard();
 
+    // Attack value
+    const MISS = 0;
+    const HIT = 1;
+
     const getBoard = () => board;
 
     // Places a ship on the gameboard at the specified location
@@ -16,93 +18,83 @@ function Gameboard() {
         const { row, col } = place;
         const { length } = ship;
 
-        // Validate the ship length
         if (!length) return 'Select a valid ship';
 
-        // Check if the place is within the board bounds
         if (row < 0 || col < 0 || row >= board.length || col >= board[0].length) {
             return 'Place is out of bounds';
         }
 
-        // Validate the orientation
         const validOrientations = ['horizontal', 'vertical'];
         if (!validOrientations.includes(orientation)) {
             return 'Choose between horizontal or vertical orientation.';
         }
 
-        if (orientation === 'horizontal') {
-            // Check if the ship fits in the space on the board
-            if (col + length > board[0].length) {
-                return 'Ship does not fit in the selected space';
-            }
+        // Set direction based on orientation
+        const [dx, dy] = orientation === 'horizontal' ? [0, 1] : [1, 0];
 
-            // Check if the space is already occupied by another ship
-            const occupiedPlace = Array.from({ length }, (_, i) => board[row][col + i]
-            ).some((cell) => cell !== null);
-            if (occupiedPlace) {
-                return 'This place is already occupied';
-            }
-
-            // Place the ship on the board
-            Array.from({ length }, (_, i) => board[row][col + i] = ship);
-        } else {
-            // Check if the ship fits in the space on the board
-            if (row + length > board.length) {
-                return 'Ship does not fit in the selected space';
-            }
-
-            // Check if the space is already occupied by another ship
-            const occupiedPlace = Array.from({ length }, (_, i) => board[row + i][col]
-            ).some((cell) => cell !== null);
-            if (occupiedPlace) {
-                return 'This place is already occupied';
-            }
-
-            // Place the ship on the board
-            Array.from({ length }, (_, i) => board[row + i][col] = ship);
+        if (
+            row + dx * (length - 1) >= board.length ||
+            col + dy * (length - 1) >= board[0].length
+        ) {
+            return 'Ship does not fit in the selected space';
         }
+
+        const isOccupied = Array.from(
+            { length }, (_, i) => board[row + i * dx][col + i * dy]
+        ).some(cell => cell !== null);
+        if (isOccupied) {
+            return 'This place is already occupied';
+        }
+
+        // Place the ship on the board
+        Array.from({ length }, (_, i) => {
+            board[row + i * dx][col + i * dy] = ship;
+        });
 
         return true;
     };
 
-    // Processes an attack on the gameboard at the specified location
+    // Processes an attack on the specified location and updates the opponent's board
     const receiveAttack = (opponentBoard, place) => {
         const { row, col } = place;
 
         // Check if the attack is within the board boundaries
-        if (row < 0 || col < 0 || row >= opponentBoard.length || col >= opponentBoard[0].length) {
+        if (
+            row < 0 || col < 0 ||
+            row >= opponentBoard.length || col >= opponentBoard[0].length
+        ) {
             return;
         }
 
         // If the place was already attacked, do nothing
-        if (opponentBoard[row][col] === 0 || opponentBoard[row][col] === 1) return;
+        if ([MISS, HIT].includes(opponentBoard[row][col])) return;
 
         // Mark as missed if no ship is present
         if (opponentBoard[row][col] === null) {
-            opponentBoard[row][col] = 0;
-            return 0;
+            opponentBoard[row][col] = MISS;
+            return MISS;
         }
 
         // Mark as hit if a ship is present
         const attackedShip = opponentBoard[row][col];
         if (attackedShip) {
             attackedShip.hit();
-            opponentBoard[row][col] = 1;
-            return 1;
+            opponentBoard[row][col] = HIT;
+            return HIT;
         }
     };
 
-    // Check if all ships are sunk
+    // Check if all ships on the board are sunk
     const allIsSunk = () => {
-        // Check if the game has started: if all cells are null, the game has not begun
         const gameNotStarted = board.every(row => row.every(cell => cell === null));
         if (gameNotStarted) return false;
 
         // Check if any ships remain: all cells contain 0, 1 or null, all ships are sunk
-        const shipsRemaining = board.some(row => row.some(cell => typeof cell === 'object' && cell !== null));
+        const shipsRemaining = board.some(
+            row => row.some(cell => typeof cell === 'object' && cell !== null)
+        );
         if (!shipsRemaining) return true;
 
-        // Return false if there are still ships on the board
         return false;
     };
 
