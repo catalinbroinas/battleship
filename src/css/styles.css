@@ -123,24 +123,36 @@ ul {
 }
 
 /* Typography */
-.title {
-  color: #fff;
-  font-size: 2.5rem;
-  text-align: center;
-  font-family: Arial, Helvetica, sans-serif;
-  font-weight: 700;
-  text-transform: uppercase;
-}
+.title,
 .sub-title {
   color: #fff;
-  font-size: 2rem;
   text-align: center;
   font-family: Arial, Helvetica, sans-serif;
   font-weight: 700;
+}
+
+.title {
+  text-transform: uppercase;
+  font-size: 2.5rem;
+}
+
+.sub-title {
+  font-size: 2rem;
   margin-bottom: 1rem;
 }
 .sub-title::first-letter {
   text-transform: capitalize;
+}
+
+.text-info {
+  color: #607d8b;
+  font-family: "Roboto", Arial, Helvetica, sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  text-align: left;
+  margin: 0;
+  padding: 0 0.5rem;
+  border-left: 2px solid #607d8b;
 }
 
 /* Form */
