@@ -94,7 +94,7 @@ function Player(name, type) {
     };
 
     // Processes an attack on the specified location and updates the opponent's board
-    const attack = (opponentBoard, place) => {
+    const processAttack = (opponentBoard, place) => {
         let attackPlace = place;
 
         // Initializes unattacked places
@@ -214,7 +214,7 @@ function Player(name, type) {
         type,
         placeAllShips,
         placeShip,
-        attack,
+        processAttack,
         allIsSunk,
         allIsPlace,
         getBoard,

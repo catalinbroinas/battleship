@@ -34,7 +34,7 @@ function Game() {
         if (!gameIsStarted || gameIsOver) return;
 
         const opponent = currentPlayer === player1 ? player2 : player1;
-        const result = currentPlayer.attack(opponent.getBoard(), place);
+        const result = currentPlayer.processAttack(opponent.getBoard(), place);
 
         if (result === undefined) return;
 
