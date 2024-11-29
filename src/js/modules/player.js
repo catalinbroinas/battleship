@@ -6,12 +6,6 @@ function Player(name, type) {
 
     // Gameboard of the player
     const board = gameboard.getBoard();
-
-    // Save available place and adjacent place for enhance computer attack
-    const unattackedPlace = [];
-    const priorityPlace = [];
-    let previousSuccessAttack = null;
-
     const getBoard = () => board;
 
     // List of ships
@@ -22,13 +16,17 @@ function Player(name, type) {
         Ship(3, 'submarine'),
         Ship(2, 'destroyer')
     ];
+    const getShips = () => ships;
 
     const ERROR_MESSAGES = {
         invalidShip: 'Invalid ship',
         boardIsFull: 'The board is full'
     };
 
-    const getShips = () => ships;
+    // Save available place and adjacent place for enhance computer attack
+    const unattackedPlace = [];
+    const priorityPlace = [];
+    let previousSuccessAttack = null;
 
     // Place all ships on the gameboard at random locations
     const placeAllShips = () => {
@@ -99,7 +97,7 @@ function Player(name, type) {
     const attack = (opponentBoard, place) => {
         let attackPlace = place;
 
-        // Initialize the list of unattacked places with all valid board positions
+        // Initializes unattacked places
         const initValidPlace = () => {
             opponentBoard.forEach((rowData, rowIndex) => {
                 rowData.forEach((colData, colIndex) => {
@@ -108,36 +106,42 @@ function Player(name, type) {
             });
         };
 
-        // Add adjacent valid positions of a successful attack to the priority list
-        const insertPriorityPlace = (target) => {
-            const directions = [
+        // Returns all valid adjacent positions for a given place
+        const getValidAdjacentPositions = (target) => {
+            const positions = [
                 { row: target.row, col: target.col + 1 },
                 { row: target.row, col: target.col - 1 },
                 { row: target.row + 1, col: target.col },
                 { row: target.row - 1, col: target.col }
-            ].filter(item => item.row >= 0 && item.row < 10 && item.col >= 0 && item.col < 10);;
+            ].filter(
+                pos => pos.row >= 0 && pos.row < 10 && pos.col >= 0 && pos.col < 10
+            );
 
-            directions.forEach(item => {
-                // Check if the adjacent position is still unattacked
-                const validPlaceIndex = unattackedPlace.findIndex(
-                    cell => cell.row === item.row && cell.col === item.col
+            return positions;
+        };
+
+        // Adds valid adjacent positions to the priority list
+        const addToPriorityList = (target) => {
+            const adjacentPositions = getValidAdjacentPositions(target);
+
+            adjacentPositions.forEach(pos => {
+                const index = unattackedPlace.findIndex(
+                    cell => cell.row === pos.row && cell.col === pos.col
                 );
 
-                // If valid, add to priority list and remove from unattacked list
-                if (validPlaceIndex !== -1) {
-                    priorityPlace.push(item);
-                    unattackedPlace.splice(validPlaceIndex, 1);
+                if (index !== -1) {
+                    priorityPlace.push(pos);
+                    unattackedPlace.splice(index, 1);
                 }
             });
         };
 
-        // Continue attacking in a specific direction
-        const continueAttackInDirection = (current, previous) => {
+        // Calculates and adds the next position in the attack direction to the priority list
+        const continueInDirection = (current, previous) => {
             const direction = {
                 row: current.row - previous.row,
                 col: current.col - previous.col
             };
-
             const nextPosition = {
                 row: current.row + direction.row,
                 col: current.col + direction.col
@@ -147,49 +151,44 @@ function Player(name, type) {
                 nextPosition.row >= 0 && nextPosition.row < 10 &&
                 nextPosition.col >= 0 && nextPosition.col < 10
             ) {
-                const validPlaceIndex = unattackedPlace.findIndex(
+                const index = unattackedPlace.findIndex(
                     cell => cell.row === nextPosition.row && cell.col === nextPosition.col
                 );
 
-                if (validPlaceIndex !== -1) {
+                if (index !== -1) {
                     priorityPlace.unshift(nextPosition);
-                    unattackedPlace.splice(validPlaceIndex, 1);
+                    unattackedPlace.splice(index, 1);
                 }
             }
         };
 
-        // Generate attack place for computer
-        if (type === 'computer') {
-            // Initialize the list of unattacked places if it's empty
-            if (unattackedPlace.length === 0) {
-                initValidPlace();
-            }
+        // Determines the next attack position for the computer
+        const determineNextAttack = () => {
+            if (unattackedPlace.length === 0) initValidPlace();
 
-            // Prioritize attacking places near successful hits
-            if (priorityPlace.length > 0) {
-                // Get the first priority place
-                attackPlace = priorityPlace.shift();
-            } else {
-                // If no priority place, attack a random position
-                const randomIndex = Math.floor(Math.random() * unattackedPlace.length);
-                attackPlace = unattackedPlace.splice(randomIndex, 1)[0];
-            }
+            if (priorityPlace.length > 0) return priorityPlace.shift();
+
+            const randomIndex = Math.floor(Math.random() * unattackedPlace.length);
+            return unattackedPlace.splice(randomIndex, 1)[0];
+        };
+
+        // Main logic for computer attack
+        if (type === 'computer') {
+            attackPlace = determineNextAttack();
         }
 
-        // Perform the attack on the chosen place
+        // Execute the attack and get the status
         const status = gameboard.receiveAttack(opponentBoard, attackPlace);
 
         // Handle successful attacks
         if (status === 1 && type === 'computer') {
             if (priorityPlace.length > 0) {
-                // Continue on the same direction
-                continueAttackInDirection(attackPlace, previousSuccessAttack);
-                previousSuccessAttack = attackPlace;
+                continueInDirection(attackPlace, previousSuccessAttack);
             } else {
-                // The first hit - add direction
-                insertPriorityPlace(attackPlace);
-                previousSuccessAttack = attackPlace;
+                addToPriorityList(attackPlace);
             }
+
+            previousSuccessAttack = attackPlace;
         }
 
         if (status === 0) return false;
