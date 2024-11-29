@@ -11,6 +11,14 @@ function Gameboard() {
     const MISS = 0;
     const HIT = 1;
 
+    const ERROR_MESSAGES = {
+        invalidShip: 'Select a valid ship',
+        outOfBounds: 'Place is out of bounds',
+        invalidOrientation: 'Choose between horizontal or vertical orientation.',
+        shipDoesNotFit: 'Ship does not fit in the selected space',
+        alreadyOccupied: 'This place is already occupied',
+    };
+
     const getBoard = () => board;
 
     // Places a ship on the gameboard at the specified location
@@ -18,15 +26,15 @@ function Gameboard() {
         const { row, col } = place;
         const { length } = ship;
 
-        if (!length) return 'Select a valid ship';
+        if (!length) return ERROR_MESSAGES.invalidShip;
 
         if (row < 0 || col < 0 || row >= board.length || col >= board[0].length) {
-            return 'Place is out of bounds';
+            return ERROR_MESSAGES.outOfBounds;
         }
 
         const validOrientations = ['horizontal', 'vertical'];
         if (!validOrientations.includes(orientation)) {
-            return 'Choose between horizontal or vertical orientation.';
+            return ERROR_MESSAGES.invalidOrientation;
         }
 
         // Set direction based on orientation
@@ -36,14 +44,14 @@ function Gameboard() {
             row + dx * (length - 1) >= board.length ||
             col + dy * (length - 1) >= board[0].length
         ) {
-            return 'Ship does not fit in the selected space';
+            return ERROR_MESSAGES.shipDoesNotFit;
         }
 
         const isOccupied = Array.from(
             { length }, (_, i) => board[row + i * dx][col + i * dy]
         ).some(cell => cell !== null);
         if (isOccupied) {
-            return 'This place is already occupied';
+            return ERROR_MESSAGES.alreadyOccupied;
         }
 
         // Place the ship on the board
