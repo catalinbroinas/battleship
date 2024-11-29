@@ -84,7 +84,7 @@ function UI() {
         const title = domManager.createDOMElement({
             elementTag: 'div',
             elementClass: ['sub-title'],
-            elementText: `${name}`
+            elementText: `${name} waters`
         });
 
         container.appendChild(title);
