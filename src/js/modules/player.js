@@ -23,16 +23,19 @@ function Player(name, type) {
         Ship(2, 'destroyer')
     ];
 
+    const ERROR_MESSAGES = {
+        invalidShip: 'Invalid ship',
+        boardIsFull: 'The board is full'
+    };
+
     const getShips = () => ships;
 
     // Place all ships on the gameboard at random locations
     const placeAllShips = () => {
-        // Check if the board is clear
         const clear = board.every(row => row.every(cell => cell === null));
         if (!clear) return false;
 
         const isAdjacentCellFree = (target) => {
-            // Adjacent direction
             const directions = [
                 { row: target.row, col: target.col + 1 },
                 { row: target.row, col: target.col - 1 },
@@ -69,10 +72,9 @@ function Player(name, type) {
                 let place = randomPlace();
 
                 while (isAdjacentCellFree(place) !== true) {
-                    place = randomPlace()
+                    place = randomPlace();
                 }
 
-                // Select orientation
                 const orientation = Math.random() < 0.5 ? 'horizontal' : 'vertical';
 
                 // Attempt to place the ship at the generated position
@@ -80,22 +82,20 @@ function Player(name, type) {
             }
         });
 
-        // Return true after all ships are placed
         return true;
     };
 
     // Place ship on the gameboard at a specified location
     const placeShip = (ship, place) => {
-        // Check ih the ship exists in the `ships` list
         const validShip = ships.find(item => item.name === ship.name);
-        if (!validShip) return 'Invalid ship';
+        if (!validShip) return ERROR_MESSAGES.invalidShip;
 
-        // Check if the board is full
-        if (allIsPlace()) return 'The board is full';
+        if (allIsPlace()) return ERROR_MESSAGES.boardIsFull;
 
         return gameboard.placeShip(ship, place);
     };
 
+    // Processes an attack on the specified location and updates the opponent's board
     const attack = (opponentBoard, place) => {
         let attackPlace = place;
 
@@ -110,7 +110,6 @@ function Player(name, type) {
 
         // Add adjacent valid positions of a successful attack to the priority list
         const insertPriorityPlace = (target) => {
-            // Define adjacent directions and ensure they stay within board bounds
             const directions = [
                 { row: target.row, col: target.col + 1 },
                 { row: target.row, col: target.col - 1 },
@@ -200,7 +199,11 @@ function Player(name, type) {
     };
 
     const allIsPlace = () => {
-        return ships.every(ship => board.some(row => row.some(item => item && item.name === ship.name)));
+        return ships.every(
+            ship => board.some(
+                row => row.some(item => item && item.name === ship.name)
+            )
+        );
     };
 
     const allIsSunk = () => {
