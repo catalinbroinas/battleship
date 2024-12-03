@@ -74,7 +74,7 @@ function UI() {
 
         const container = domManager.createDOMElement({
             elementTag: 'div',
-            elementClass: ['gameboard'],
+            elementClass: ['gameboard', `gameboard-${type}`],
             elementAttributes: { id: `gameboard-${type}` }
         });
 
@@ -83,7 +83,7 @@ function UI() {
 
         const title = domManager.createDOMElement({
             elementTag: 'div',
-            elementClass: ['sub-title'],
+            elementClass: ['sub-title', `${type}`],
             elementText: `${name} waters`
         });
 
