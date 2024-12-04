@@ -225,14 +225,26 @@ function UI() {
 
         const messageElement = domManager.createDOMElement({
             elementTag: 'p',
-            elementClass: ['sub-title'],
+            elementClass: ['sub-title']
+        });
+        const messageIcon = domManager.createDOMElement({
+            elementTag: 'i',
+            elementClass: ['fa-solid', 'fa-trophy', 'me-2'],
+            elementAttributes: { 'aria-hidden': 'true' }
+        });
+        const messageText = domManager.createDOMElement({
+            elementTag: 'span',
             elementText: message
         });
+        messageElement.appendChild(messageIcon);
+        messageElement.appendChild(messageText);
         container.appendChild(messageElement);
 
         const playAgainButton = domManager.createButton({
             name: 'Play Again',
             buttonClass: ['btn-playAgain'],
+            iconClass: ['fa-solid', 'fa-play', 'me-2'],
+            elementAttributes: { 'aria-hidden': 'true' },
             clickHandler: () => resetGame()
         });
         container.appendChild(playAgainButton);
@@ -240,6 +252,8 @@ function UI() {
         const resetGameButton = domManager.createButton({
             name: 'Reset Game',
             buttonClass: ['btn-reset'],
+            iconClass: ['fa-solid', 'fa-rotate-right', 'me-2'],
+            elementAttributes: { 'aria-hidden': 'true' },
             clickHandler: () => location.reload()
         });
         container.appendChild(resetGameButton);
