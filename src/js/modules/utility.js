@@ -78,10 +78,35 @@ function DomUtilityManager() {
         return button;
     };
 
+    // Add ripple effect to buttons
+    const rippleEffect = (btn) => {
+        const ripple = document.createElement("span");
+
+        ripple.classList.add("ripple");
+
+        btn.appendChild(ripple);
+
+        // Get position of X
+        const x = btn.clientX - btn.offsetLeft;
+
+        // Get position of Y 
+        const y = btn.clientY - btn.offsetTop;
+
+        // Position the span element 
+        ripple.style.left = `${x}px`;
+        ripple.style.top = `${y}px`;
+
+        // Remove span after 0.3s 
+        setTimeout(() => {
+            ripple.remove();
+        }, 300);
+    };
+
     return {
         clearPageContent,
         createDOMElement,
-        createButton
+        createButton,
+        rippleEffect
     };
 }
 

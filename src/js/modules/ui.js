@@ -209,9 +209,15 @@ function UI() {
             throw new Error('Form element not found!');
         }
 
+        startGameButton.addEventListener('click', (event) => {
+            domManager.rippleEffect(event.target);
+        });
+
         form.addEventListener('submit', (event) => {
             event.preventDefault();
-            if (initGame()) renderGame();
+            setTimeout(() => {
+                if (initGame()) renderGame();
+            }, 500);
         });
     };
 
@@ -242,19 +248,29 @@ function UI() {
 
         const playAgainButton = domManager.createButton({
             name: 'Play Again',
-            buttonClass: ['btn-playAgain'],
+            buttonClass: ['btn', 'btn-playAgain'],
             iconClass: ['fa-solid', 'fa-play', 'me-2'],
             elementAttributes: { 'aria-hidden': 'true' },
-            clickHandler: () => resetGame()
+            clickHandler: (event) => {
+                domManager.rippleEffect(event.target);
+                setTimeout(() => {
+                    resetGame();
+                }, 500);
+            }
         });
         container.appendChild(playAgainButton);
 
         const resetGameButton = domManager.createButton({
             name: 'Reset Game',
-            buttonClass: ['btn-reset'],
+            buttonClass: ['btn', 'btn-reset'],
             iconClass: ['fa-solid', 'fa-rotate-right', 'me-2'],
             elementAttributes: { 'aria-hidden': 'true' },
-            clickHandler: () => location.reload()
+            clickHandler: (event) => {
+                domManager.rippleEffect(event.target);
+                setTimeout(() => {
+                    location.reload();
+                }, 500);
+            }
         });
         container.appendChild(resetGameButton);
 
