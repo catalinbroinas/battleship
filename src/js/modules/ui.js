@@ -61,7 +61,7 @@ function UI() {
         const resetBoard = domManager.createButton({
             name: 'Reset Board',
             buttonClass: ['btn', 'btn-reset'],
-            iconClass: ['fa-solid', 'fa-rotate-right', 'me-2'],
+            iconClass: ['fa-solid', 'fa-arrows-rotate', 'me-2'],
             clickHandler: (event) => {
                 try {
                     domManager.rippleEffect(event.target);
@@ -78,7 +78,7 @@ function UI() {
         const confirmButton = domManager.createButton({
             name: 'Confirm',
             buttonClass: ['btn', 'btn-submit'],
-            iconClass: ['fa-solid', 'fa-play', 'me-2'],
+            iconClass: ['fa-solid', 'fa-check', 'me-2'],
             clickHandler: (event) => {
                 try {
                     domManager.rippleEffect(event.target);
