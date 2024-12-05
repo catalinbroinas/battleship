@@ -259,10 +259,6 @@ function UI() {
         });
     };
 
-    const displayMessage = (message) => {
-
-    };
-
     const startGame = () => {
         if (!form) {
             throw new Error('Form element not found!');
