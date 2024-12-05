@@ -38,6 +38,64 @@ function UI() {
         return true;
     };
 
+    const renderSetup = () => {
+        if (!pageContainer) {
+            throw new Error('Page container element not found.');
+        }
+
+        const setupContainer = domManager.createDOMElement({
+            elementTag: 'div',
+            elementClass: ['setup-wrapper']
+        });
+        const rowElement = domManager.createDOMElement({
+            elementTag: 'div',
+            elementClass: ['row-button']
+        });
+
+        const playerBoard = renderGameBoard(game.getPlayerBoard(), 'player');
+        if (!playerBoard) {
+            throw new Error('Failed to render the player`s gameboard.');
+        }
+
+        const resetBoard = domManager.createButton({
+            name: 'Reset Board',
+            buttonClass: ['btn', 'btn-reset'],
+            iconClass: ['fa-solid', 'fa-rotate-right', 'me-2'],
+            clickHandler: (event) => {
+                try {
+                    domManager.rippleEffect(event.target);
+                    setTimeout(() => {
+                        if (resetSetup()) renderSetup();
+                    }, 500);
+                } catch (error) {
+                    throw new Error(`Failed to reset setup: ${error.message}`);
+                }
+            }
+        });
+        rowElement.appendChild(resetBoard);
+
+        const confirmButton = domManager.createButton({
+            name: 'Confirm',
+            buttonClass: ['btn', 'btn-submit'],
+            iconClass: ['fa-solid', 'fa-play', 'me-2'],
+            clickHandler: (event) => {
+                try {
+                    domManager.rippleEffect(event.target);
+                    setTimeout(renderGame, 500);
+                } catch (error) {
+                    throw new Error(`Failed to loading game: ${error.message}`);
+                }
+            }
+        });
+        rowElement.appendChild(confirmButton);
+
+        setupContainer.appendChild(playerBoard);
+        setupContainer.appendChild(rowElement);
+
+        domManager.clearPageContent(pageContainer);
+        pageContainer.appendChild(setupContainer);
+    };
+
     const renderGame = () => {
         if (!pageContainer) {
             throw new Error('Page container element not found.');
@@ -216,7 +274,7 @@ function UI() {
         form.addEventListener('submit', (event) => {
             event.preventDefault();
             setTimeout(() => {
-                if (initGame()) renderGame();
+                if (initGame()) renderSetup();
             }, 500);
         });
     };
@@ -280,12 +338,7 @@ function UI() {
         return true;
     };
 
-    // Restart the game with initial set up
-    const resetGame = () => {
-        if (!game.endGame()) {
-            throw new Error('Cannot restart the game. The game is still ongoing.');
-        }
-
+    const resetSetup = () => {
         // Get player names
         const { playerName, computerName } = getPlayerNames();
         if (!playerName || !computerName) {
@@ -297,6 +350,17 @@ function UI() {
         if (!isGameReset) {
             throw new Error('Game reset failed. Could not initialize a new game instance.');
         }
+
+        return true;
+    };
+
+    // Restart the game with initial set up
+    const resetGame = () => {
+        if (!game.endGame()) {
+            throw new Error('Cannot restart the game. The game is still ongoing.');
+        }
+
+        resetSetup();
 
         try {
             renderGame();

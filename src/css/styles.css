@@ -122,6 +122,23 @@ ul {
   z-index: 2;
 }
 
+.setup-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  z-index: 2;
+}
+
+.row-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+}
+
 /* Typography */
 .title,
 .sub-title {
