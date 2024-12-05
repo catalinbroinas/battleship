@@ -10,3 +10,5 @@ Technologies used:
 *  Webpack
 *  Jest
 *  Font Awesome
+
+[Live Demo](https://catalinbroinas.github.io/battleship/)
