@@ -1,10 +1,11 @@
 import { Game } from './game';
-import { DomUtilityManager } from './utility';
+import { DomUtilityManager, StringUtilityManager } from './utility';
 
 function UI() {
     // Instance of game module and DOM manager
     const game = Game();
     const domManager = DomUtilityManager();
+    const stringManager = StringUtilityManager();
 
     // Select elements
     const pageContainer = document.querySelector('#page-container');
@@ -298,7 +299,7 @@ function UI() {
         });
         const messageText = domManager.createDOMElement({
             elementTag: 'span',
-            elementText: message
+            elementText: stringManager.capitalizeFirstLetter(message)
         });
         messageElement.appendChild(messageIcon);
         messageElement.appendChild(messageText);
